@@ -1,23 +1,56 @@
-// src/app/App.tsx
 import { useState } from "react";
 import BayScreen from "@/features/bay/BayScreen";
-import BayListScreen from "@/features/bay/BayListScreen";
+import ItemScreen from "@/features/item/ItemScreen";
+import BayItemListScreen from "@/features/common/BayItemListScreen";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 
+type Step = "scanBay" | "addItems" | "viewList";
+
 const App = () => {
-  const [view, setView] = useState<"scan" | "list">("scan");
+  const [currentStep, setCurrentStep] = useState<Step>("scanBay");
+  const [currentBay, setCurrentBay] = useState<string>("");
+
+  const handleBayCollected = (bayCode: string) => {
+    setCurrentBay(bayCode);
+    setCurrentStep("addItems");
+  };
+
+  const handleFinishItems = () => {
+    setCurrentBay("");
+    setCurrentStep("scanBay");
+  };
 
   return (
-    <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-4 space-y-4">
-      {view === "scan" ? <BayScreen /> : <BayListScreen />}
+    <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-start p-4 space-y-4">
+      {currentStep === "scanBay" && (
+        <BayScreen onBayCollected={handleBayCollected} />
+      )}
 
-      <Button
-        variant="outline"
-        onClick={() => setView(view === "scan" ? "list" : "scan")}
-      >
-        {view === "scan" ? "View Scanned Bays" : "Back to Scanning"}
-      </Button>
+      {currentStep === "addItems" && currentBay && (
+        <div className="w-full max-w-md flex flex-col space-y-4">
+          <ItemScreen bayCode={currentBay} />
+          <Button
+            variant="outline"
+            onClick={handleFinishItems}
+            className="w-full"
+          >
+            Finish and Scan Another Bay
+          </Button>
+        </div>
+      )}
+
+      {currentStep === "viewList" && <BayItemListScreen />}
+
+      {/* Bottom Controls */}
+      <div className="flex space-x-2">
+        <Button variant="outline" onClick={() => setCurrentStep("scanBay")}>
+          Scan Bay
+        </Button>
+        <Button variant="outline" onClick={() => setCurrentStep("viewList")}>
+          View Bays & Items
+        </Button>
+      </div>
 
       <Toaster richColors />
     </main>
