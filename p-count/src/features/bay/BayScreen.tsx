@@ -5,10 +5,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
+import { useBayData } from "./hooks/useBayData";
 
-const BayScreen: React.FC = () => {
+interface BayScreenProps {
+  onBayCollected?: (bayCode: string) => void;
+}
+
+const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
   const [bayCode, setBayCode] = useState("");
   const [error, setError] = useState("");
+  const { addBay } = useBayData();
 
   const handleCollect = () => {
     if (!bayCode.trim()) {
@@ -16,8 +22,14 @@ const BayScreen: React.FC = () => {
       return;
     }
 
+    addBay(bayCode.trim());
     setError("");
     toast.success(`Bay ${bayCode} collected successfully!`);
+
+    if (onBayCollected) {
+      onBayCollected(bayCode.trim());
+    }
+
     setBayCode("");
   };
 
