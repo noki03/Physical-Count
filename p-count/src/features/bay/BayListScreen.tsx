@@ -1,4 +1,3 @@
-// src/features/bay/BayListScreen.tsx
 import React from "react";
 import { useBayData } from "./hooks/useBayData";
 import {
@@ -21,11 +20,11 @@ const BayListScreen: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-md mt-6">
-      <Card>
+    <div className="w-full max-w-md mx-auto mt-8">
+      <Card className="shadow-lg border-border">
         <CardHeader>
           <h2 className="text-lg font-semibold text-center">
-            📋 Scanned Bays Summary
+            Scanned Bays Summary
           </h2>
         </CardHeader>
         <CardContent>
@@ -34,19 +33,9 @@ const BayListScreen: React.FC = () => {
               <AccordionItem key={bay.code} value={bay.code}>
                 <AccordionTrigger>{bay.code}</AccordionTrigger>
                 <AccordionContent>
-                  {bay.items.length > 0 ? (
-                    <ul className="text-sm text-muted-foreground">
-                      {bay.items.map((item) => (
-                        <li key={item.id} className="py-1 border-b">
-                          {item.name} — Qty: {item.quantity}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-muted-foreground italic">
-                      No items scanned yet.
-                    </p>
-                  )}
+                  <p className="text-sm text-muted-foreground italic">
+                    Bay added successfully.
+                  </p>
                 </AccordionContent>
               </AccordionItem>
             ))}
