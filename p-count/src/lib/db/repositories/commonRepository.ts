@@ -35,4 +35,13 @@ export const CommonRepository = {
     const items = await db.items.where("bayCode").equals(bayCode).toArray();
     return { ...bay, items };
   },
+
+  /**
+   * Clear all local data (used after successful upload)
+   */
+  resetDatabase: async (): Promise<void> => {
+    await db.bays.clear();
+    await db.items.clear();
+    console.log("🧹 Local database cleared successfully.");
+  },
 };

@@ -6,6 +6,7 @@ export const useUploader = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [uploaderName, setUploaderName] = useState<string>("");
+  const [shouldReset, setShouldReset] = useState<boolean>(false);
 
   const uploadAll = async () => {
     if (!uploaderName.trim()) {
@@ -16,13 +17,15 @@ export const useUploader = () => {
     setIsUploading(true);
     setStatus("Uploading data...");
 
-    const result = await defaultUploader(uploaderName);
+    const result = await defaultUploader(uploaderName, shouldReset);
 
-    if (result.success) {
-      setStatus("Upload successful!");
-    } else {
-      setStatus("Upload failed. Please try again.");
-    }
+    setStatus(
+      result.success
+        ? shouldReset
+          ? "Upload successful and local data cleared!"
+          : "Upload successful!"
+        : "Upload failed. Please try again."
+    );
 
     setIsUploading(false);
   };
@@ -33,5 +36,7 @@ export const useUploader = () => {
     isUploading,
     status,
     uploadAll,
+    shouldReset,
+    setShouldReset,
   };
 };

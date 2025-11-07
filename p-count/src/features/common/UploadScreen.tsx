@@ -3,11 +3,18 @@ import React from "react";
 import { useUploader } from "./hooks/useUploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input"; // assuming you have a reusable Input
+import { Input } from "@/components/ui/input";
 
 const UploadScreen: React.FC = () => {
-  const { uploaderName, setUploaderName, uploadAll, isUploading, status } =
-    useUploader();
+  const {
+    uploaderName,
+    setUploaderName,
+    uploadAll,
+    isUploading,
+    status,
+    shouldReset,
+    setShouldReset,
+  } = useUploader();
 
   return (
     <div className="w-full max-w-md mx-auto mt-8">
@@ -22,6 +29,16 @@ const UploadScreen: React.FC = () => {
             onChange={(e) => setUploaderName(e.target.value)}
             disabled={isUploading}
           />
+
+          <label className="flex items-center space-x-2 text-sm">
+            <input
+              type="checkbox"
+              checked={shouldReset}
+              onChange={(e) => setShouldReset(e.target.checked)}
+              disabled={isUploading}
+            />
+            <span>Reset local data after upload</span>
+          </label>
 
           <Button
             onClick={uploadAll}
