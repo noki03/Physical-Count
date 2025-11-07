@@ -1,11 +1,14 @@
+// src/App.tsx
 import { useState } from "react";
 import BayScreen from "@/features/bay/BayScreen";
 import ItemScreen from "@/features/item/ItemScreen";
 import BayItemListScreen from "@/features/common/BayItemListScreen";
+import UploadScreen from "@/features/common/UploadScreen";
+import { BayRepository } from "@/lib/db/repositories/bayRepository";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 
-type Step = "scanBay" | "addItems" | "viewList";
+type Step = "scanBay" | "addItems" | "viewList" | "upload";
 
 const App = () => {
   const [currentStep, setCurrentStep] = useState<Step>("scanBay");
@@ -16,7 +19,10 @@ const App = () => {
     setCurrentStep("addItems");
   };
 
-  const handleFinishItems = () => {
+  const handleFinishItems = async () => {
+    if (currentBay) {
+      await BayRepository.finalizeBay(currentBay);
+    }
     setCurrentBay("");
     setCurrentStep("scanBay");
   };
@@ -41,6 +47,7 @@ const App = () => {
       )}
 
       {currentStep === "viewList" && <BayItemListScreen />}
+      {currentStep === "upload" && <UploadScreen />}
 
       {/* Bottom Controls */}
       <div className="flex space-x-2">
@@ -49,6 +56,9 @@ const App = () => {
         </Button>
         <Button variant="outline" onClick={() => setCurrentStep("viewList")}>
           View Bays & Items
+        </Button>
+        <Button variant="outline" onClick={() => setCurrentStep("upload")}>
+          Upload
         </Button>
       </div>
 
