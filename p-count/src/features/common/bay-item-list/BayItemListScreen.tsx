@@ -6,7 +6,8 @@ import { BayItemAccordion } from "./components/BayItemAccordion";
 import { ResetDatabaseDialog } from "./components/ResetDatabaseDialog";
 
 export const BayItemListScreen: React.FC = () => {
-  const { bays, loading, resetting, handleReset } = useBayItemList();
+  const { bays, loading, resetting, handleReset, handleUpdateBay } =
+    useBayItemList();
 
   if (loading) {
     return (
@@ -28,7 +29,7 @@ export const BayItemListScreen: React.FC = () => {
   return (
     <div className="w-full max-w-md mx-auto mt-8 space-y-4">
       <BayItemCard title="Bays & Items">
-        <BayItemAccordion bays={bays} />
+        <BayItemAccordion bays={bays} onUpdateBay={handleUpdateBay} />
       </BayItemCard>
 
       <div className="text-center">

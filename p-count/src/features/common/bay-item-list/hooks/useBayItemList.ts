@@ -1,6 +1,7 @@
 // src/features/common/bay-item-list/hooks/useBayItemList.ts
 import { useState, useEffect } from "react";
 import { CommonRepository } from "@/lib/db/repositories/commonRepository";
+import { BayRepository } from "@/lib/db/repositories/bayRepository";
 import type { Bay } from "@/features/bay/types";
 import type { Item } from "@/features/item/types";
 
@@ -9,7 +10,6 @@ export const useBayItemList = () => {
   const [loading, setLoading] = useState(true);
   const [resetting, setResetting] = useState(false);
 
-  // Fetch all bays with their items
   const fetchBays = async () => {
     setLoading(true);
     try {
@@ -23,12 +23,11 @@ export const useBayItemList = () => {
     }
   };
 
-  // Reset the database (actual confirmation handled in UI)
   const handleReset = async () => {
     setResetting(true);
     try {
       await CommonRepository.resetDatabase();
-      await fetchBays(); // Refresh list after reset
+      await fetchBays();
     } catch (error) {
       console.error("Failed to reset database:", error);
     } finally {
@@ -36,9 +35,19 @@ export const useBayItemList = () => {
     }
   };
 
+  // ✅ Update bay code
+  const handleUpdateBay = async (id: number, newCode: string) => {
+    try {
+      await BayRepository.updateBay(id, { code: newCode });
+      await fetchBays();
+    } catch (error) {
+      console.error("Failed to update bay:", error);
+    }
+  };
+
   useEffect(() => {
     fetchBays();
   }, []);
 
-  return { bays, loading, resetting, handleReset };
+  return { bays, loading, resetting, handleReset, handleUpdateBay };
 };
