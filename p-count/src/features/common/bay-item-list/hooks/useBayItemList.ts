@@ -9,23 +9,31 @@ export const useBayItemList = () => {
   const [loading, setLoading] = useState(true);
   const [resetting, setResetting] = useState(false);
 
+  // Fetch all bays with their items
   const fetchBays = async () => {
     setLoading(true);
-    const data = await CommonRepository.getBaysWithItems();
-    setBays(data);
-    setLoading(false);
+    try {
+      const data = await CommonRepository.getBaysWithItems();
+      setBays(data);
+    } catch (error) {
+      console.error("Failed to fetch bays:", error);
+      setBays([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Reset the database (actual confirmation handled in UI)
   const handleReset = async () => {
-    const confirmReset = confirm(
-      "Are you sure you want to clear all local data? This action cannot be undone."
-    );
-    if (!confirmReset) return;
-
     setResetting(true);
-    await CommonRepository.resetDatabase();
-    await fetchBays();
-    setResetting(false);
+    try {
+      await CommonRepository.resetDatabase();
+      await fetchBays(); // Refresh list after reset
+    } catch (error) {
+      console.error("Failed to reset database:", error);
+    } finally {
+      setResetting(false);
+    }
   };
 
   useEffect(() => {
