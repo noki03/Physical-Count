@@ -5,5 +5,5 @@ export interface Item {
   bayCode: string;
   itemCode: string;
   quantity: number;
-  timestamp?: number; // Optional timestamp
+  timestamp?: number;
 }
