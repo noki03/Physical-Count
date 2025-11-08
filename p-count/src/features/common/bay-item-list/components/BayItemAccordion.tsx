@@ -8,31 +8,38 @@ import {
 } from "@/components/ui/accordion";
 import type { Bay } from "@/features/bay/types";
 import type { Item } from "@/features/item/types";
+import { BayItemList } from "./BayItemList";
+import { EditBayModal } from "./EditBayModal";
 
 interface BayItemAccordionProps {
   bays: (Bay & { items: Item[] })[];
+  onUpdateBay?: (id: number, newCode: string) => void;
 }
 
-export const BayItemAccordion: React.FC<BayItemAccordionProps> = ({ bays }) => {
+export const BayItemAccordion: React.FC<BayItemAccordionProps> = ({
+  bays,
+  onUpdateBay,
+}) => {
   return (
     <Accordion type="single" collapsible>
       {bays.map((bay) => (
         <AccordionItem key={bay.code} value={bay.code}>
-          <AccordionTrigger>{bay.code}</AccordionTrigger>
-          <AccordionContent>
-            {bay.items.length === 0 ? (
-              <p className="text-sm text-muted-foreground italic">
-                No items added yet.
-              </p>
-            ) : (
-              <ul className="list-disc pl-5 text-sm">
-                {bay.items.map((item) => (
-                  <li key={item.id}>
-                    {item.itemCode} ×{item.quantity}
-                  </li>
-                ))}
-              </ul>
+          <div className="flex justify-between items-center px-2 sm:px-3">
+            {/* Accordion header trigger on the left */}
+            <AccordionTrigger className="flex-1 text-left py-3">
+              <span className="font-medium">{bay.code}</span>
+            </AccordionTrigger>
+
+            {/* Action buttons on the right (NOT inside the trigger) */}
+            {onUpdateBay && (
+              <div className="ml-2">
+                <EditBayModal bay={bay} onSave={onUpdateBay} />
+              </div>
             )}
+          </div>
+
+          <AccordionContent>
+            <BayItemList items={bay.items} />
           </AccordionContent>
         </AccordionItem>
       ))}
