@@ -1,6 +1,6 @@
 // src/features/bay/UploadScreen.tsx
 import React from "react";
-import { useUploader } from "./hooks/useUploader";
+import { useUploader } from "../hooks/useUploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
