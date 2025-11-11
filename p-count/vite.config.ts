@@ -29,13 +29,13 @@ export default defineConfig({
             cert: fs.readFileSync("./cert/localhost+1.pem"),
         }, */
     host: "0.0.0.0",
-    port: 5173,
+    port: 5174,
     cors: {
       origin: "*",
     },
     hmr: {
       host: getLocalIP(), // dynamically resolved IP
-      port: 5173,
+      port: 5174,
     },
   },
 });
