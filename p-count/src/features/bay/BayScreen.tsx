@@ -13,17 +13,15 @@ interface BayScreenProps {
 const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
   const [bayCode, setBayCode] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { addBay } = useBayData();
+  const { addBay, addBayStatus } = useBayData();
 
   const handleCollect = async () => {
     if (!bayCode.trim()) {
       setError("Please enter or scan a bay code.");
       return;
     }
-    setLoading(true);
-    setError("");
 
+    setError("");
     try {
       await addBay(bayCode.trim());
       toast.success(`Bay ${bayCode} collected successfully!`);
@@ -32,10 +30,10 @@ const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
     } catch (err) {
       console.error(err);
       setError("Failed to add bay. Please try again.");
-    } finally {
-      setLoading(false);
     }
   };
+
+  const isLoading = addBayStatus === "pending";
 
   return (
     <div className="w-full max-w-md mx-auto mt-8">
@@ -53,7 +51,7 @@ const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
               placeholder="Enter or scan Bay code"
               value={bayCode}
               onChange={(e) => setBayCode(e.target.value)}
-              disabled={loading}
+              disabled={isLoading}
             />
             {error && (
               <Alert variant="destructive">
@@ -63,9 +61,9 @@ const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
             <Button
               onClick={handleCollect}
               className="w-full"
-              disabled={loading}
+              disabled={isLoading}
             >
-              {loading ? "Collecting..." : "Collect Bay"}
+              {isLoading ? "Collecting..." : "Collect Bay"}
             </Button>
           </div>
         </CardContent>
