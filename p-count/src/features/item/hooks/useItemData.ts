@@ -1,26 +1,37 @@
 // src/features/item/hooks/useItemData.ts
-import { useLiveQuery } from "dexie-react-hooks";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ItemRepository } from "@/lib/db/repositories/itemRepository";
 import type { Item } from "../types";
-import { db } from "@/lib/db/core/database";
 
 export const useItemData = (bayCode?: string) => {
-  // Live query: fetch items by bayCode, or all if no bayCode provided
-  const items =
-    useLiveQuery(() => {
-      if (bayCode) {
-        return ItemRepository.getItemsByBay(bayCode);
-      }
-      return db.items.toArray();
-    }, [bayCode]) || [];
+  const queryClient = useQueryClient();
 
-  // Function to add a new item
-  const addItem = async (item: Omit<Item, "id">) => {
-    await ItemRepository.addItem(item);
-  };
+  // Query to fetch items for a given bay
+  const { data: items = [], isLoading } = useQuery({
+    queryKey: ["items", bayCode],
+    queryFn: async () => {
+      if (bayCode) {
+        return await ItemRepository.getItemsByBay(bayCode);
+      }
+      return await ItemRepository.getAllItems();
+    },
+  });
+
+  // Mutation for adding a new item
+  const addItemMutation = useMutation({
+    mutationFn: async (item: Omit<Item, "id">) => {
+      return await ItemRepository.addItem(item);
+    },
+    onSuccess: () => {
+      // Refetch item list after successful add
+      queryClient.invalidateQueries({ queryKey: ["items", bayCode] });
+    },
+  });
 
   return {
     items,
-    addItem,
+    isLoading,
+    addItem: addItemMutation.mutateAsync,
+    isAdding: addItemMutation.isPending,
   };
 };

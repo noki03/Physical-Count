@@ -7,15 +7,15 @@ import { toast } from "sonner";
 import { useItemData } from "./hooks/useItemData";
 
 interface ItemScreenProps {
+  bayId: number;
   bayCode: string;
 }
 
-const ItemScreen: React.FC<ItemScreenProps> = ({ bayCode }) => {
+const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
   const [itemCode, setItemCode] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { addItem, items } = useItemData(bayCode);
+  const { items, addItem, isAdding, isLoading } = useItemData(bayCode);
 
   const handleAddItem = async () => {
     if (!itemCode.trim()) {
@@ -27,12 +27,12 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayCode }) => {
       return;
     }
 
-    setLoading(true);
     setError("");
 
     try {
       await addItem({
         bayCode,
+        bayId,
         itemCode: itemCode.trim(),
         quantity,
         timestamp: Date.now(),
@@ -43,8 +43,6 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayCode }) => {
     } catch (err) {
       console.error(err);
       setError("Failed to add item. Please try again.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -63,14 +61,14 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayCode }) => {
               placeholder="Enter or scan item code"
               value={itemCode}
               onChange={(e) => setItemCode(e.target.value)}
-              disabled={loading}
+              disabled={isAdding}
             />
             <Input
               type="number"
               placeholder="Quantity"
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
-              disabled={loading}
+              disabled={isAdding}
               min={1}
             />
             {error && (
@@ -81,12 +79,13 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayCode }) => {
             <Button
               onClick={handleAddItem}
               className="w-full"
-              disabled={loading}
+              disabled={isAdding}
             >
-              {loading ? "Adding..." : "Add Item"}
+              {isAdding ? "Adding..." : "Add Item"}
             </Button>
 
-            {items.length > 0 && (
+            {/* Items List */}
+            {!isLoading && items.length > 0 && (
               <Card className="mt-4 border-border">
                 <CardHeader>
                   <h2 className="text-sm font-semibold text-center">
@@ -97,12 +96,18 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayCode }) => {
                   <ul className="list-disc pl-5 text-sm">
                     {items.map((i) => (
                       <li key={i.id}>
-                        {i.itemCode} x{i.quantity}
+                        {i.itemCode} ×{i.quantity}
                       </li>
                     ))}
                   </ul>
                 </CardContent>
               </Card>
+            )}
+
+            {isLoading && (
+              <p className="text-center text-sm text-muted-foreground">
+                Loading items...
+              </p>
             )}
           </div>
         </CardContent>
