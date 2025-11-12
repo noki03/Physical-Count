@@ -7,9 +7,8 @@ import { toast } from "sonner";
 import { useBayData } from "./hooks/useBayData";
 
 interface BayScreenProps {
-  onBayCollected?: (bayCode: string) => void;
+  onBayCollected?: (bay: { id: number; code: string }) => void;
 }
-
 const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
   const [bayCode, setBayCode] = useState("");
   const [error, setError] = useState("");
@@ -23,9 +22,10 @@ const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
 
     setError("");
     try {
-      await addBay(bayCode.trim());
+      const newBay = await addBay(bayCode.trim());
       toast.success(`Bay ${bayCode} collected successfully!`);
-      onBayCollected?.(bayCode.trim());
+
+      onBayCollected?.(newBay);
       setBayCode("");
     } catch (err) {
       console.error(err);
