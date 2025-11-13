@@ -2,16 +2,17 @@
 import React, { useState } from "react";
 import {
   AlertDialog,
-  AlertDialogTrigger,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 interface ResetDatabaseDialogProps {
   onConfirm: () => Promise<void> | void;
@@ -33,46 +34,33 @@ export const ResetDatabaseDialog: React.FC<ResetDatabaseDialogProps> = ({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button
-          variant="destructive"
-          size="lg"
-          className="w-full sm:w-auto bg-red-700 text-white hover:bg-red-800 transition"
+          variant="outline"
+          size="sm"
+          className="w-full gap-2 text-muted-foreground "
           disabled={resetting}
         >
-          {resetting ? "Resetting..." : "Reset Database"}
+          <Trash2 className="h-4 w-4" />
+          {resetting ? "Resetting..." : "Reset All Data"}
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="mx-auto p-6 rounded-xl shadow-lg border border-border bg-background">
-        <AlertDialogHeader className="text-center space-y-2">
-          <AlertDialogTitle className="text-lg font-bold text-destructive-foreground">
-            Confirm Data Reset
-          </AlertDialogTitle>
-          <AlertDialogDescription className="text-sm text-muted-foreground">
-            This action will <strong>permanently clear</strong> all local bay
-            and item data. This cannot be undone. Are you sure you want to
-            continue?
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Reset All Data?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will permanently delete all bay and item data. This action
+            cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2 mt-4">
-          <AlertDialogCancel asChild>
-            <Button
-              variant="outline"
-              className="w-full sm:w-auto"
-              disabled={resetting}
-            >
-              Cancel
-            </Button>
-          </AlertDialogCancel>
-
-          <AlertDialogAction asChild>
-            <Button
-              onClick={handleConfirm}
-              className="w-full sm:w-auto bg-red-700 text-white hover:bg-red-800 transition"
-              disabled={resetting}
-            >
-              {resetting ? "Resetting..." : "Confirm Reset"}
-            </Button>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={resetting}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleConfirm}
+            disabled={resetting}
+            className="bg-destructive text-destructive-foreground text-white hover:bg-destructive/90"
+          >
+            {resetting ? "Resetting..." : "Reset Data"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
