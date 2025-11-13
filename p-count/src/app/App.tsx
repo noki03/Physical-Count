@@ -1,23 +1,32 @@
+// src/App.tsx
 import { useState } from "react";
 import BayScreen from "@/features/bay/BayScreen";
 import ItemScreen from "@/features/item/ItemScreen";
-import BayItemListScreen from "@/features/common/BayItemListScreen";
+import UploadScreen from "@/features/common/upload/UploadScreen";
+import { BayRepository } from "@/lib/db/repositories/bayRepository";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
+import { BayItemListScreen } from "@/features/common/bay-item-list/BayItemListScreen";
 
-type Step = "scanBay" | "addItems" | "viewList";
+type Step = "scanBay" | "addItems" | "viewList" | "upload";
 
 const App = () => {
   const [currentStep, setCurrentStep] = useState<Step>("scanBay");
-  const [currentBay, setCurrentBay] = useState<string>("");
+  const [currentBay, setCurrentBay] = useState<{
+    id: number;
+    code: string;
+  } | null>(null);
 
-  const handleBayCollected = (bayCode: string) => {
-    setCurrentBay(bayCode);
+  const handleBayCollected = (bay: { id: number; code: string }) => {
+    setCurrentBay(bay);
     setCurrentStep("addItems");
   };
 
-  const handleFinishItems = () => {
-    setCurrentBay("");
+  const handleFinishItems = async () => {
+    if (currentBay) {
+      await BayRepository.finalizeBay(currentBay.code);
+    }
+    setCurrentBay(null);
     setCurrentStep("scanBay");
   };
 
@@ -29,7 +38,7 @@ const App = () => {
 
       {currentStep === "addItems" && currentBay && (
         <div className="w-full max-w-md flex flex-col space-y-4">
-          <ItemScreen bayCode={currentBay} />
+          <ItemScreen bayId={currentBay.id} bayCode={currentBay.code} />
           <Button
             variant="outline"
             onClick={handleFinishItems}
@@ -41,6 +50,7 @@ const App = () => {
       )}
 
       {currentStep === "viewList" && <BayItemListScreen />}
+      {currentStep === "upload" && <UploadScreen />}
 
       {/* Bottom Controls */}
       <div className="flex space-x-2">
@@ -49,6 +59,9 @@ const App = () => {
         </Button>
         <Button variant="outline" onClick={() => setCurrentStep("viewList")}>
           View Bays & Items
+        </Button>
+        <Button variant="outline" onClick={() => setCurrentStep("upload")}>
+          Upload
         </Button>
       </div>
 

@@ -15,4 +15,18 @@ export const BayRepository = {
   deleteBay: async (id: number) => {
     return await db.bays.delete(id);
   },
+
+  /**
+   * Mark a bay as finalized
+   */
+  finalizeBay: async (bayCode: string) => {
+    const bay = await db.bays.where("code").equals(bayCode).first();
+    if (!bay) {
+      console.warn(`⚠️ No bay found with code ${bayCode} to finalize.`);
+      return;
+    }
+
+    await db.bays.update(bay.id!, { finalized: true });
+    console.log(`✅ Bay ${bayCode} marked as finalized.`);
+  },
 };
