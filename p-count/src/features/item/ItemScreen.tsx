@@ -15,7 +15,7 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
   const [itemCode, setItemCode] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState("");
-  const { items, addItem, isAdding, isLoading } = useItemData(bayCode);
+  const { items, addItem, isAdding, isLoading } = useItemData(bayId);
 
   const handleAddItem = async () => {
     if (!itemCode.trim()) {
@@ -31,8 +31,8 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
 
     try {
       await addItem({
-        bayCode,
         bayId,
+        bayCode, // optional but good for display/upload tracking
         itemCode: itemCode.trim(),
         quantity,
         timestamp: Date.now(),

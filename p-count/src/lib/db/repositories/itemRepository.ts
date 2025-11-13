@@ -6,12 +6,15 @@ export const ItemRepository = {
   addItem: async (item: Omit<Item, "id">) => {
     return await db.items.add(item);
   },
+
   getAllItems: async () => {
     return await db.items.toArray();
   },
-  getItemsByBay: async (bayCode: string) => {
-    return await db.items.where("bayCode").equals(bayCode).toArray();
+
+  getItemsByBayId: async (bayId: number) => {
+    return await db.items.where("bayId").equals(bayId).toArray();
   },
+
   deleteItem: async (id: number) => {
     return await db.items.delete(id);
   },

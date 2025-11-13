@@ -5,7 +5,7 @@ import type { Item } from "@/features/item/types";
 
 export const CommonRepository = {
   /**
-   * Fetch all finalized bays along with their items
+   * Fetch all finalized bays along with their items (by bayId)
    */
   getBaysWithItems: async (): Promise<(Bay & { items: Item[] })[]> => {
     // 🧩 Only get finalized bays
@@ -15,10 +15,7 @@ export const CommonRepository = {
 
     const result = await Promise.all(
       finalizedBays.map(async (bay) => {
-        const items = await db.items
-          .where("bayCode")
-          .equals(bay.code)
-          .toArray();
+        const items = await db.items.where("bayId").equals(bay.id!).toArray();
         return { ...bay, items };
       })
     );
@@ -30,15 +27,15 @@ export const CommonRepository = {
   },
 
   /**
-   * Fetch a single bay (any, finalized or not) along with its items
+   * Fetch a single bay (any, finalized or not) along with its items (by bayId)
    */
   getBayWithItems: async (
-    bayCode: string
+    bayId: number
   ): Promise<(Bay & { items: Item[] }) | null> => {
-    const bay = await db.bays.get({ code: bayCode });
+    const bay = await db.bays.get(bayId);
     if (!bay) return null;
 
-    const items = await db.items.where("bayCode").equals(bayCode).toArray();
+    const items = await db.items.where("bayId").equals(bayId).toArray();
     return { ...bay, items };
   },
 

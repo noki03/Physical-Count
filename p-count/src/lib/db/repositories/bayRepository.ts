@@ -19,14 +19,14 @@ export const BayRepository = {
   /**
    * Mark a bay as finalized
    */
-  finalizeBay: async (bayCode: string) => {
-    const bay = await db.bays.where("code").equals(bayCode).first();
+  finalizeBay: async (bayId: number) => {
+    const bay = await db.bays.get(bayId);
     if (!bay) {
-      console.warn(`⚠️ No bay found with code ${bayCode} to finalize.`);
+      console.warn(`⚠️ No bay found with id ${bayId} to finalize.`);
       return;
     }
 
     await db.bays.update(bay.id!, { finalized: true });
-    console.log(`✅ Bay ${bayCode} marked as finalized.`);
+    console.log(`✅ Bay ${bay.code} (id: ${bay.id}) marked as finalized.`);
   },
 };
