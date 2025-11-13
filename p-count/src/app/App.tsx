@@ -12,18 +12,21 @@ type Step = "scanBay" | "addItems" | "viewList" | "upload";
 
 const App = () => {
   const [currentStep, setCurrentStep] = useState<Step>("scanBay");
-  const [currentBay, setCurrentBay] = useState<string>("");
+  const [currentBay, setCurrentBay] = useState<{
+    id: number;
+    code: string;
+  } | null>(null);
 
-  const handleBayCollected = (bayCode: string) => {
-    setCurrentBay(bayCode);
+  const handleBayCollected = (bay: { id: number; code: string }) => {
+    setCurrentBay(bay);
     setCurrentStep("addItems");
   };
 
   const handleFinishItems = async () => {
     if (currentBay) {
-      await BayRepository.finalizeBay(currentBay);
+      await BayRepository.finalizeBay(currentBay.code);
     }
-    setCurrentBay("");
+    setCurrentBay(null);
     setCurrentStep("scanBay");
   };
 
@@ -35,7 +38,7 @@ const App = () => {
 
       {currentStep === "addItems" && currentBay && (
         <div className="w-full max-w-md flex flex-col space-y-4">
-          <ItemScreen bayCode={currentBay} />
+          <ItemScreen bayId={currentBay.id} bayCode={currentBay.code} />
           <Button
             variant="outline"
             onClick={handleFinishItems}
