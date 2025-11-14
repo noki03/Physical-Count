@@ -25,10 +25,37 @@ export const useItemData = (bayId?: number) => {
     },
   });
 
+  const deleteItemMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return await ItemRepository.deleteItem(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items", bayId] });
+      queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
+    },
+  });
+
+  const deleteAllItemsMutation = useMutation({
+    mutationFn: async () => {
+      if (bayId === undefined) return;
+      return await ItemRepository.deleteItemsByBayId(bayId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items", bayId] });
+      queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
+    },
+  });
+
   return {
     items,
     isLoading,
     addItem: addItemMutation.mutateAsync,
     isAdding: addItemMutation.isPending,
+
+    deleteItem: deleteItemMutation.mutateAsync,
+    isDeleting: deleteItemMutation.isPending,
+
+    deleteAllItems: deleteAllItemsMutation.mutateAsync, // 🔥 NEW
+    isDeletingAll: deleteAllItemsMutation.isPending,
   };
 };

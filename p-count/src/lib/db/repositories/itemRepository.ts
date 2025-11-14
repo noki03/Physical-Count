@@ -18,4 +18,8 @@ export const ItemRepository = {
   deleteItem: async (id: number) => {
     return await db.items.delete(id);
   },
+
+  deleteItemsByBayId: async (bayId: number) => {
+    return await db.items.where("bayId").equals(bayId).delete();
+  },
 };
