@@ -24,7 +24,7 @@ const App = () => {
 
   const handleFinishItems = async () => {
     if (currentBay) {
-      await BayRepository.finalizeBay(currentBay.code);
+      await BayRepository.finalizeBay(currentBay.id);
     }
     setCurrentBay(null);
     setCurrentStep("scanBay");

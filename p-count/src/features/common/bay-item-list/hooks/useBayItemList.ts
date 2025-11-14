@@ -1,53 +1,49 @@
 // src/features/common/bay-item-list/hooks/useBayItemList.ts
-import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CommonRepository } from "@/lib/db/repositories/commonRepository";
 import { BayRepository } from "@/lib/db/repositories/bayRepository";
 import type { Bay } from "@/features/bay/types";
 import type { Item } from "@/features/item/types";
 
 export const useBayItemList = () => {
-  const [bays, setBays] = useState<(Bay & { items: Item[] })[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [resetting, setResetting] = useState(false);
+  const queryClient = useQueryClient();
 
-  const fetchBays = async () => {
-    setLoading(true);
-    try {
-      const data = await CommonRepository.getBaysWithItems();
-      setBays(data);
-    } catch (error) {
-      console.error("Failed to fetch bays:", error);
-      setBays([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: bays = [],
+    isLoading: loading,
+    isError,
+    error,
+  } = useQuery<(Bay & { items: Item[] })[]>({
+    queryKey: ["bays-with-items"],
+    queryFn: CommonRepository.getBaysWithItems,
+  });
 
-  const handleReset = async () => {
-    setResetting(true);
-    try {
-      await CommonRepository.resetDatabase();
-      await fetchBays();
-    } catch (error) {
-      console.error("Failed to reset database:", error);
-    } finally {
-      setResetting(false);
-    }
-  };
+  // 🧹 Reset database mutation
+  const resetMutation = useMutation({
+    mutationFn: CommonRepository.resetDatabase,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
+    },
+  });
 
-  // ✅ Update bay code
-  const handleUpdateBay = async (id: number, newCode: string) => {
-    try {
+  // ✏️ Update bay code mutation
+  const updateBayMutation = useMutation({
+    mutationFn: async ({ id, newCode }: { id: number; newCode: string }) => {
       await BayRepository.updateBay(id, { code: newCode });
-      await fetchBays();
-    } catch (error) {
-      console.error("Failed to update bay:", error);
-    }
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
+    },
+  });
+
+  return {
+    bays,
+    loading,
+    isError,
+    error,
+    resetting: resetMutation.isPending,
+    handleReset: () => resetMutation.mutate(),
+    handleUpdateBay: (id: number, newCode: string) =>
+      updateBayMutation.mutate({ id, newCode }),
   };
-
-  useEffect(() => {
-    fetchBays();
-  }, []);
-
-  return { bays, loading, resetting, handleReset, handleUpdateBay };
 };
