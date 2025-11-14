@@ -1,10 +1,7 @@
 import React from "react";
 import type { Item } from "@/features/item/types";
 import { Trash2 } from "lucide-react";
-// Import ConfirmationDialog for individual item deletion
 import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
-// Import Button for the ConfirmationDialog's internal use (trigger is a <button> but the dialog itself uses <Button>)
-import { Button } from "@/components/ui/button";
 
 interface BayItemListProps {
   items: Item[];
@@ -26,13 +23,11 @@ export const BayItemList: React.FC<BayItemListProps> = ({
   return (
     <ul className="overflow-hidden">
       {items.map((item) => {
-        // Define the button element that will trigger the dialog
         const DeleteItemTrigger = (
           <button
             type="button"
             className="text-muted-foreground hover:text-destructive transition-colors p-1 rounded"
             aria-label={`Delete ${item.itemCode}`}
-            // IMPORTANT: onClick is removed here, as clicking this now opens the dialog
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -43,7 +38,7 @@ export const BayItemList: React.FC<BayItemListProps> = ({
             key={item.id}
             className="py-2 px-2 flex justify-between items-start text-sm hover:bg-muted/40 transition-colors border border-border rounded mb-0.5"
           >
-            {/* Left section (No Change) */}
+            {/* Left section  */}
             <div className="flex flex-col leading-tight">
               <div className="flex items-center space-x-2">
                 <span className="font-medium tracking-tight">
@@ -61,12 +56,11 @@ export const BayItemList: React.FC<BayItemListProps> = ({
               )}
             </div>
 
-            {/* Right section: delete icon WRAPPED in ConfirmationDialog */}
+            {/* Right section*/}
             <ConfirmationDialog
-              trigger={DeleteItemTrigger} // The trash icon button
+              trigger={DeleteItemTrigger}
               title={`Delete Item: ${item.itemCode}?`}
               description={`Are you sure you want to permanently delete the record for item ${item.itemCode} (Qty: ${item.quantity})?`}
-              // The action to execute upon confirmation
               onConfirm={() => onDeleteItem?.(item.id!)}
               confirmText="Delete Item"
               confirmVariant="destructive"
