@@ -48,7 +48,19 @@ export const BayItemDialog: React.FC<BayItemDialogProps> = ({ bay }) => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="w-screen h-screen max-w-none p-0 m-0 rounded-none flex flex-col bg-background">
+      <DialogContent
+        overlayClassName="bg-background blur-md"
+        className="
+          w-screen h-screen max-w-none p-0 m-0 rounded-none flex flex-col 
+          duration-500
+          data-[state=open]:animate-in
+          data-[state=open]:fade-in-0
+          data-[state=open]:slide-in-from-bottom-10
+          data-[state=closed]:animate-out
+          data-[state=closed]:fade-out-0
+          data-[state=closed]:slide-out-to-bottom-10
+        "
+      >
         {/* Header  */}
         <DialogHeader className="shrink-0 p-4 border-b border-border">
           <DialogTitle className="text-lg font-semibold">
