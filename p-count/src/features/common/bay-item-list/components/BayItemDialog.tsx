@@ -27,7 +27,7 @@ export const BayItemDialog: React.FC<BayItemDialogProps> = ({ bay }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          View Items
+          Items
         </Button>
       </DialogTrigger>
 

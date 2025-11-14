@@ -29,7 +29,7 @@ export const BayItemListScreen: React.FC = () => {
       <BayListContainer title="Bays & Items">
         <div className="space-y-3">
           {bays.map((bay) => (
-            <BayCard key={bay.code} bay={bay} />
+            <BayCard key={bay.id} bay={bay} />
           ))}
         </div>
       </BayListContainer>
