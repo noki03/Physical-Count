@@ -1,4 +1,4 @@
-// src/features/common/bay-item-list/components/BayCard.tsx
+// Updated BayCard.tsx with delete icon button
 import React from "react";
 import type { Bay } from "@/features/bay/types";
 import type { Item } from "@/features/item/types";
@@ -9,14 +9,16 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { BayItemDialog } from "./BayItemDialog";
+import { DeleteBayButton } from "./DeleteBayButton";
 
 interface BayCardProps {
   bay: Bay & { items: Item[] };
+  onDeleteBay: (id: number) => void;
 }
 
-export const BayCard: React.FC<BayCardProps> = ({ bay }) => {
+export const BayCard: React.FC<BayCardProps> = ({ bay, onDeleteBay }) => {
   return (
-    <Card className="border shadow-none mb-1 p-2 rounded-sm ">
+    <Card className="border shadow-none mb-1 p-2 rounded-sm">
       <CardHeader className="flex flex-row justify-between items-center px-2 py-0">
         <div>
           <CardTitle className="text-sm font-semibold leading-tight">
@@ -26,7 +28,17 @@ export const BayCard: React.FC<BayCardProps> = ({ bay }) => {
             {bay.items.length} {bay.items.length === 1 ? "item" : "items"}
           </CardDescription>
         </div>
-        <BayItemDialog bay={bay} />
+
+        <div className="flex gap-2 items-center">
+          <BayItemDialog bay={bay} />
+
+          {/* NEW reusable Delete Bay button */}
+          <DeleteBayButton
+            bayId={bay.id!}
+            bayCode={bay.code}
+            onDeleteBay={onDeleteBay}
+          />
+        </div>
       </CardHeader>
     </Card>
   );
