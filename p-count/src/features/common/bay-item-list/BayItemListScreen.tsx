@@ -6,7 +6,8 @@ import { BayCard } from "./components/BayCard";
 import { BayListContainer } from "./components/BayListContainer";
 
 export const BayItemListScreen: React.FC = () => {
-  const { bays, loading, resetting, handleReset } = useBayItemList();
+  const { bays, loading, resetting, handleReset, handleDeleteBay } =
+    useBayItemList();
 
   if (loading) {
     return (
@@ -29,7 +30,11 @@ export const BayItemListScreen: React.FC = () => {
       <BayListContainer title="Bays & Items">
         <div className="space-y-3">
           {bays.map((bay) => (
-            <BayCard key={bay.id} bay={bay} />
+            <BayCard
+              key={bay.id}
+              bay={bay}
+              onDeleteBay={handleDeleteBay} // 👈 NEW
+            />
           ))}
         </div>
       </BayListContainer>
