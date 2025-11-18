@@ -31,14 +31,15 @@ const App = () => {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-start p-4 space-y-4">
+    <main className="text-foreground flex flex-col p-2 gap-4 bg-background">
       {currentStep === "scanBay" && (
         <BayScreen onBayCollected={handleBayCollected} />
       )}
 
       {currentStep === "addItems" && currentBay && (
-        <div className="w-full max-w-md flex flex-col space-y-4">
+        <div className="w-full max-w-md flex flex-col gap-4 mx-auto">
           <ItemScreen bayId={currentBay.id} bayCode={currentBay.code} />
+
           <Button
             variant="outline"
             onClick={handleFinishItems}
@@ -53,16 +54,32 @@ const App = () => {
       {currentStep === "upload" && <UploadScreen />}
 
       {/* Bottom Controls */}
-      <div className="flex space-x-2">
-        <Button variant="outline" onClick={() => setCurrentStep("scanBay")}>
-          Scan Bay
-        </Button>
-        <Button variant="outline" onClick={() => setCurrentStep("viewList")}>
-          View Bays & Items
-        </Button>
-        <Button variant="outline" onClick={() => setCurrentStep("upload")}>
-          Upload
-        </Button>
+      <div className="w-full flex justify-center">
+        <div className="flex flex-wrap gap-2 w-full max-w-md">
+          <Button
+            variant="outline"
+            onClick={() => setCurrentStep("scanBay")}
+            className="flex-1 min-w-[100px]"
+          >
+            Scan Bay
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() => setCurrentStep("viewList")}
+            className="flex-1 min-w-[100px]"
+          >
+            View Bays & Items
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() => setCurrentStep("upload")}
+            className="flex-1 min-w-[100px]"
+          >
+            Upload
+          </Button>
+        </div>
       </div>
 
       <Toaster richColors />
