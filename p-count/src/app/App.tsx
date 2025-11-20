@@ -7,6 +7,8 @@ import { BayRepository } from "@/lib/db/repositories/bayRepository";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { BayItemListScreen } from "@/features/common/bay-item-list/BayItemListScreen";
+import { SpeedDial } from "@/components/common/SpeedDial";
+import { List, ScanBarcode, UploadCloud } from "lucide-react";
 
 type Step = "scanBay" | "addItems" | "viewList" | "upload";
 
@@ -31,14 +33,15 @@ const App = () => {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-start p-4 space-y-4">
+    <main className="text-foreground flex flex-col p-2 gap-4 bg-background">
       {currentStep === "scanBay" && (
         <BayScreen onBayCollected={handleBayCollected} />
       )}
 
       {currentStep === "addItems" && currentBay && (
-        <div className="w-full max-w-md flex flex-col space-y-4">
+        <div className="w-full max-w-md flex flex-col gap-4 mx-auto">
           <ItemScreen bayId={currentBay.id} bayCode={currentBay.code} />
+
           <Button
             variant="outline"
             onClick={handleFinishItems}
@@ -52,18 +55,27 @@ const App = () => {
       {currentStep === "viewList" && <BayItemListScreen />}
       {currentStep === "upload" && <UploadScreen />}
 
-      {/* Bottom Controls */}
-      <div className="flex space-x-2">
-        <Button variant="outline" onClick={() => setCurrentStep("scanBay")}>
-          Scan Bay
-        </Button>
-        <Button variant="outline" onClick={() => setCurrentStep("viewList")}>
-          View Bays & Items
-        </Button>
-        <Button variant="outline" onClick={() => setCurrentStep("upload")}>
-          Upload
-        </Button>
-      </div>
+      {/* Bottom SpeedDial Floating Actions */}
+      <SpeedDial
+        placement="bottom-right"
+        actions={[
+          {
+            icon: <ScanBarcode size={18} />,
+            label: "Scan Bay",
+            onClick: () => setCurrentStep("scanBay"),
+          },
+          {
+            icon: <List size={18} />,
+            label: "View Bays & Items",
+            onClick: () => setCurrentStep("viewList"),
+          },
+          {
+            icon: <UploadCloud size={18} />,
+            label: "Upload",
+            onClick: () => setCurrentStep("upload"),
+          },
+        ]}
+      />
 
       <Toaster richColors />
     </main>

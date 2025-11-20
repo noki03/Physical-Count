@@ -54,7 +54,7 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
             Add Item to Bay {bayCode}
           </h1>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-3.5">
           <div className="flex flex-col space-y-4 mt-2">
             <Input
               type="text"

@@ -13,6 +13,7 @@ import type { Item } from "@/features/item/types";
 import { BayItemList } from "./BayItemList";
 import { useItemData } from "@/features/item/hooks/useItemData";
 import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
+import { Package } from "lucide-react";
 
 interface BayItemDialogProps {
   bay: Bay & { items: Item[] };
@@ -44,7 +45,7 @@ export const BayItemDialog: React.FC<BayItemDialogProps> = ({ bay }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          Items
+          <Package size={16} />
         </Button>
       </DialogTrigger>
 

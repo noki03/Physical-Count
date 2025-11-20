@@ -18,7 +18,7 @@ export const useBayItemList = () => {
     queryFn: CommonRepository.getBaysWithItems,
   });
 
-  // 🧹 Reset database mutation
+  // 🧹 Reset DB
   const resetMutation = useMutation({
     mutationFn: CommonRepository.resetDatabase,
     onSuccess: async () => {
@@ -26,10 +26,20 @@ export const useBayItemList = () => {
     },
   });
 
-  // ✏️ Update bay code mutation
+  // ✏️ Update Bay Code
   const updateBayMutation = useMutation({
     mutationFn: async ({ id, newCode }: { id: number; newCode: string }) => {
       await BayRepository.updateBay(id, { code: newCode });
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
+    },
+  });
+
+  // 🗑️ Delete Bay Mutation (NEW)
+  const deleteBayMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await BayRepository.deleteBay(id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
@@ -41,9 +51,17 @@ export const useBayItemList = () => {
     loading,
     isError,
     error,
+
+    // reset
     resetting: resetMutation.isPending,
     handleReset: () => resetMutation.mutate(),
+
+    // update
     handleUpdateBay: (id: number, newCode: string) =>
       updateBayMutation.mutate({ id, newCode }),
+
+    // delete (NEW)
+    deletingBay: deleteBayMutation.isPending,
+    handleDeleteBay: (id: number) => deleteBayMutation.mutate(id),
   };
 };
