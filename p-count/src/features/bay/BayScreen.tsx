@@ -37,15 +37,15 @@ const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
 
   return (
     <div className="w-full max-w-md mx-auto mt-8">
-      <Card className="border-border">
+      <Card className="border-border ">
         <CardHeader>
           <h1 className="text-xl font-semibold text-center">P-Count System</h1>
           <p className="text-sm text-muted-foreground text-center">
             Identify a bay before scanning items.
           </p>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col space-y-4 mt-2">
+        <CardContent className="px-3.5">
+          <div className="flex flex-col space-y-4 mt-2 ">
             <Input
               type="text"
               placeholder="Enter or scan Bay code"
