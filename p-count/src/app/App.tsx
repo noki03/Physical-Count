@@ -7,6 +7,8 @@ import { BayRepository } from "@/lib/db/repositories/bayRepository";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { BayItemListScreen } from "@/features/common/bay-item-list/BayItemListScreen";
+import { SpeedDial } from "@/components/common/SpeedDial";
+import { List, ScanBarcode, UploadCloud } from "lucide-react";
 
 type Step = "scanBay" | "addItems" | "viewList" | "upload";
 
@@ -53,34 +55,27 @@ const App = () => {
       {currentStep === "viewList" && <BayItemListScreen />}
       {currentStep === "upload" && <UploadScreen />}
 
-      {/* Bottom Controls */}
-      <div className="w-full flex justify-center">
-        <div className="flex flex-wrap gap-2 w-full max-w-md">
-          <Button
-            variant="outline"
-            onClick={() => setCurrentStep("scanBay")}
-            className="flex-1 min-w-[100px]"
-          >
-            Scan Bay
-          </Button>
-
-          <Button
-            variant="outline"
-            onClick={() => setCurrentStep("viewList")}
-            className="flex-1 min-w-[100px]"
-          >
-            View Bays & Items
-          </Button>
-
-          <Button
-            variant="outline"
-            onClick={() => setCurrentStep("upload")}
-            className="flex-1 min-w-[100px]"
-          >
-            Upload
-          </Button>
-        </div>
-      </div>
+      {/* Bottom SpeedDial Floating Actions */}
+      <SpeedDial
+        placement="bottom-right"
+        actions={[
+          {
+            icon: <ScanBarcode size={18} />,
+            label: "Scan Bay",
+            onClick: () => setCurrentStep("scanBay"),
+          },
+          {
+            icon: <List size={18} />,
+            label: "View Bays & Items",
+            onClick: () => setCurrentStep("viewList"),
+          },
+          {
+            icon: <UploadCloud size={18} />,
+            label: "Upload",
+            onClick: () => setCurrentStep("upload"),
+          },
+        ]}
+      />
 
       <Toaster richColors />
     </main>
