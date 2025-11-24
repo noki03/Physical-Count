@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Plus, X } from "lucide-react";
@@ -19,6 +19,7 @@ export const SpeedDial: React.FC<SpeedDialProps> = ({
   placement = "bottom-right",
 }) => {
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   const pos = {
     "bottom-right": "bottom-4 right-4",
@@ -27,8 +28,27 @@ export const SpeedDial: React.FC<SpeedDialProps> = ({
     "top-left": "top-4 left-4",
   }[placement];
 
+  // Close when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
+
   return (
-    <div className={cn("fixed z-40 flex flex-col items-end", pos)}>
+    <div ref={ref} className={cn("fixed z-40 flex flex-col items-end", pos)}>
       {/* Actions */}
       <AnimatePresence>
         {open && (
@@ -60,7 +80,6 @@ export const SpeedDial: React.FC<SpeedDialProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Floating Button */}
       {/* Floating Button */}
       <button
         onClick={() => setOpen(!open)}

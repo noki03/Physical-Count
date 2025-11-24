@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { useBayData } from "./hooks/useBayData";
+import { BayForm } from "./components/BayForm";
 
 interface BayScreenProps {
   onBayCollected?: (bay: { id: number; code: string }) => void;
 }
+
 const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
   const [bayCode, setBayCode] = useState("");
   const [error, setError] = useState("");
@@ -19,12 +18,11 @@ const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
       setError("Please enter or scan a bay code.");
       return;
     }
-
     setError("");
+
     try {
       const newBay = await addBay(bayCode.trim());
       toast.success(`Bay ${bayCode} collected successfully!`);
-
       onBayCollected?.(newBay);
       setBayCode("");
     } catch (err) {
@@ -37,35 +35,22 @@ const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
 
   return (
     <div className="w-full max-w-md mx-auto mt-8">
-      <Card className="border-border ">
+      <Card className="border-border">
         <CardHeader>
           <h1 className="text-xl font-semibold text-center">P-Count System</h1>
           <p className="text-sm text-muted-foreground text-center">
             Identify a bay before scanning items.
           </p>
         </CardHeader>
+
         <CardContent className="px-3.5">
-          <div className="flex flex-col space-y-4 mt-2 ">
-            <Input
-              type="text"
-              placeholder="Enter or scan Bay code"
-              value={bayCode}
-              onChange={(e) => setBayCode(e.target.value)}
-              disabled={isLoading}
-            />
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            <Button
-              onClick={handleCollect}
-              className="w-full"
-              disabled={isLoading}
-            >
-              {isLoading ? "Collecting..." : "Collect Bay"}
-            </Button>
-          </div>
+          <BayForm
+            bayCode={bayCode}
+            error={error}
+            isLoading={isLoading}
+            onChange={setBayCode}
+            onSubmit={handleCollect}
+          />
         </CardContent>
       </Card>
     </div>
