@@ -4,8 +4,11 @@ import { useUploader } from "../hooks/useUploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useAppStore } from "@/store/useAppStore";
+import { CommonRepository } from "@/lib/db/repositories/commonRepository";
 
 const UploadScreen: React.FC = () => {
+  const { resetSession } = useAppStore();
   const {
     uploaderName,
     setUploaderName,
@@ -15,6 +18,32 @@ const UploadScreen: React.FC = () => {
     shouldReset,
     setShouldReset,
   } = useUploader();
+
+  // Check sync state for UI
+  const [allBays, setAllBays] = React.useState<any[]>([]);
+  const [isAllSynced, setIsAllSynced] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkSyncState = async () => {
+      const bays = await CommonRepository.getBaysWithItems();
+      setAllBays(bays);
+
+      // Check if no bays exist or all bays are uploaded
+      const hasNoBays = bays.length === 0;
+      const allBaysUploaded =
+        bays.length > 0 && bays.every((bay) => bay.isUploaded);
+      setIsAllSynced(hasNoBays || allBaysUploaded);
+    };
+
+    checkSyncState();
+  }, []);
+
+  const handleUploadWithSessionReset = async () => {
+    const result = await uploadAll();
+    if (result?.success) {
+      resetSession();
+    }
+  };
 
   return (
     <div className="w-full max-w-md mx-auto mt-8">
@@ -40,14 +69,27 @@ const UploadScreen: React.FC = () => {
             <span>Reset local data after upload</span>
           </label>
 
-          <Button
-            onClick={uploadAll}
-            disabled={isUploading}
-            variant="outline"
-            className="w-full"
-          >
-            {isUploading ? "Uploading..." : "Upload to Server"}
-          </Button>
+          {isAllSynced ? (
+            <div className="text-center space-y-2">
+              <p className="text-sm text-muted-foreground">
+                {allBays.length === 0
+                  ? "No data to upload."
+                  : "All local data is already synced."}
+              </p>
+              <Button variant="outline" className="w-full" disabled>
+                Upload to Server
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={handleUploadWithSessionReset}
+              disabled={isUploading}
+              variant="outline"
+              className="w-full"
+            >
+              {isUploading ? "Uploading..." : "Upload to Server"}
+            </Button>
+          )}
 
           {status && (
             <p className="text-sm text-muted-foreground text-center">

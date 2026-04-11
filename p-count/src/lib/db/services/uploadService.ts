@@ -4,7 +4,7 @@ import { CommonRepository } from "../repositories/commonRepository";
 
 export const defaultUploader = async (
   uploaderName: string,
-  shouldReset = false
+  shouldReset = false,
 ) => {
   const bays = await db.bays.toArray();
   const items = await db.items.toArray();
@@ -41,6 +41,10 @@ export const defaultUploader = async (
 
     if (shouldReset) {
       await CommonRepository.resetDatabase();
+    } else {
+      // Mark all bays and items as uploaded without clearing data
+      await db.bays.toCollection().modify({ isUploaded: true });
+      await db.items.toCollection().modify({ isUploaded: true });
     }
 
     return { success: true, message: "Upload simulated successfully." };

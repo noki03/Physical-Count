@@ -4,4 +4,5 @@ export type Bay = {
   code: string; // Your bay code
   finalized?: boolean; // Optional finalized flag
   timestamp?: number; // Optional timestamp
+  isUploaded?: boolean; // Upload sync state
 };
