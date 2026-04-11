@@ -9,6 +9,11 @@
 - [x] Integrate next-themes ThemeProvider
 - [x] Refactor App.tsx layout wrapper
 
+### Phase 2: Core Data Entry UX
+
+- [x] Implement animated theme toggle
+- [x] Add mobile-specific HTML attributes (inputMode, enterKeyHint) to forms
+
 ## Future Phases
 
 - [ ] Theme toggle UI implementation

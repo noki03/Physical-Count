@@ -1,6 +1,6 @@
 import React from "react";
 import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
+import { Classic } from "@theme-toggles/react";
 import { Button } from "@/components/ui/button";
 
 const Header: React.FC = () => {
@@ -21,11 +21,20 @@ const Header: React.FC = () => {
         className="h-9 w-9"
         aria-label="Toggle theme"
       >
-        {theme === "dark" ? (
-          <Sun className="h-4 w-4" />
-        ) : (
-          <Moon className="h-4 w-4" />
-        )}
+        <Classic
+          {...({
+            toggled: theme === "dark",
+            toggle: toggleTheme,
+            style: {
+              transform: "scale(1.4)",
+              transformOrigin: "center",
+              display: "flex",
+              margin: "10px",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+          } as any)}
+        />
       </Button>
     </header>
   );

@@ -42,6 +42,9 @@ export const BayForm: React.FC<BayFormProps> = ({
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
         disabled={isLoading}
+        autoComplete="off"
+        enterKeyHint="go"
+        autoCapitalize="characters"
       />
 
       {error && (
