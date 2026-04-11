@@ -1,7 +1,6 @@
 import React from "react";
 import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Classic } from "@theme-toggles/react";
 
 const Header: React.FC = () => {
   const { theme, setTheme } = useTheme();
@@ -14,19 +13,22 @@ const Header: React.FC = () => {
     <header className="w-full py-1 px-4 bg-primary text-primary-foreground shadow flex items-center justify-between">
       <h1 className="text-xl font-bold">Physical Count </h1>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={toggleTheme}
-        className="h-9 w-9"
-        aria-label="Toggle theme"
-      >
-        {theme === "dark" ? (
-          <Sun className="h-4 w-4" />
-        ) : (
-          <Moon className="h-4 w-4" />
-        )}
-      </Button>
+      <div className="flex items-center justify-center hover:bg-accent rounded-md h-9 w-9 transition-colors">
+        <Classic
+          {...({
+            toggled: theme === "dark",
+            toggle: toggleTheme,
+            style: {
+              transform: "scale(1.4)",
+              transformOrigin: "center",
+              display: "flex",
+              margin: "10px",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+          } as any)}
+        />
+      </div>
     </header>
   );
 };

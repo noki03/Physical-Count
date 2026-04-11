@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import App from "./App";
 import "../styles/globals.css";
+import "@theme-toggles/react/css/Classic.css";
 
 // ✅ Extend Window type to avoid TS2339
 declare global {

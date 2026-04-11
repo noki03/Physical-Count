@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+const FOCUS_DELAY_MS = 50;
+
 interface ItemFormProps {
   itemCode: string;
   quantity: number;
@@ -40,7 +42,7 @@ export const ItemForm: React.FC<ItemFormProps> = ({
       setTimeout(() => {
         itemInputRef.current?.focus();
         itemInputRef.current?.select();
-      }, 50);
+      }, FOCUS_DELAY_MS);
     }
   };
 
@@ -56,6 +58,9 @@ export const ItemForm: React.FC<ItemFormProps> = ({
         disabled={isAdding}
         autoFocus
         onKeyDown={handleItemEnter}
+        autoComplete="off"
+        enterKeyHint="next"
+        autoCapitalize="characters"
       />
 
       {/* QUANTITY INPUT */}
@@ -69,6 +74,9 @@ export const ItemForm: React.FC<ItemFormProps> = ({
         onChange={(e) => onQuantityChange(Number(e.target.value))}
         onFocus={(e) => e.target.select()}
         onKeyDown={handleQtyEnter}
+        inputMode="decimal"
+        pattern="[0-9]*"
+        enterKeyHint="done"
       />
 
       {error && (

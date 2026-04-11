@@ -7,6 +7,8 @@ import { useItemData } from "./hooks/useItemData";
 import { ItemHeader } from "./components/ItemHeader";
 import { ItemForm } from "./components/ItemForm";
 import { ItemList } from "./components/ItemList";
+import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
+import type { Item } from "./types";
 
 interface ItemScreenProps {
   bayId: number;
@@ -17,8 +19,10 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
   const [itemCode, setItemCode] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState("");
+  const [itemToDelete, setItemToDelete] = useState<Item | null>(null);
 
-  const { items, addItem, isAdding, isLoading } = useItemData(bayId);
+  const { items, addItem, deleteItem, isAdding, isLoading } =
+    useItemData(bayId);
 
   const handleAddItem = async () => {
     if (!itemCode.trim()) return setError("Please enter or scan an item code.");
@@ -43,6 +47,18 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
     }
   };
 
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete?.id) return;
+
+    try {
+      await deleteItem(itemToDelete.id);
+      toast.success("Item deleted successfully!");
+      setItemToDelete(null);
+    } catch {
+      toast.error("Failed to delete item. Please try again.");
+    }
+  };
+
   return (
     <div className="w-full max-w-md mx-auto mt-8">
       <Card className="border-border">
@@ -61,9 +77,33 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
             isAdding={isAdding}
           />
 
-          <ItemList items={items} isLoading={isLoading} />
+          <ItemList
+            items={items}
+            isLoading={isLoading}
+            onDeleteClick={(item) => setItemToDelete(item)}
+          />
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmationDialog
+        trigger={<div />} // Hidden trigger - controlled by state
+        title={
+          itemToDelete
+            ? `Delete Item: ${itemToDelete.itemCode}?`
+            : "Delete Item"
+        }
+        description={
+          itemToDelete
+            ? `Are you sure you want to permanently delete item ${itemToDelete.itemCode} (Qty: ${itemToDelete.quantity})?`
+            : ""
+        }
+        onConfirm={handleConfirmDelete}
+        confirmText="Delete"
+        confirmVariant="destructive"
+        open={itemToDelete !== null}
+        onOpenChange={(open: boolean) => !open && setItemToDelete(null)}
+      />
     </div>
   );
 };
