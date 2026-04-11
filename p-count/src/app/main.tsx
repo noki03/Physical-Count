@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "next-themes";
 import App from "./App";
 import "../styles/globals.css";
 
@@ -20,7 +21,9 @@ window.__TANSTACK_QUERY_CLIENT__ = queryClient;
 createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <App />
+      </ThemeProvider>
     </QueryClientProvider>
-  </StrictMode>
+  </StrictMode>,
 );

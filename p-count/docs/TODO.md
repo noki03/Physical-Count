@@ -5,8 +5,9 @@
 - [x] Audit codebase structure
 - [x] Establish .windsurfrules
 - [x] Setup global Zustand store & centralized types
-- [ ] Integrate next-themes ThemeProvider
-- [ ] Refactor App.tsx layout wrapper
+- [x] Reorganize documentation into docs/ folder
+- [x] Integrate next-themes ThemeProvider
+- [x] Refactor App.tsx layout wrapper
 
 ## Future Phases
 
