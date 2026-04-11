@@ -1,5 +1,4 @@
 // src/App.tsx
-import { useState } from "react";
 import BayScreen from "@/features/bay/BayScreen";
 import ItemScreen from "@/features/item/ItemScreen";
 import UploadScreen from "@/features/common/upload/UploadScreen";
@@ -9,27 +8,22 @@ import { Button } from "@/components/ui/button";
 import { BayItemListScreen } from "@/features/common/bay-item-list/BayItemListScreen";
 import { SpeedDial } from "@/components/common/SpeedDial";
 import { List, ScanBarcode, UploadCloud } from "lucide-react";
-
-type Step = "scanBay" | "addItems" | "viewList" | "upload";
+import { useAppStore } from "@/store/useAppStore";
 
 const App = () => {
-  const [currentStep, setCurrentStep] = useState<Step>("scanBay");
-  const [currentBay, setCurrentBay] = useState<{
-    id: number;
-    code: string;
-  } | null>(null);
+  const { currentStep, currentBay, setStep, setCurrentBay } = useAppStore();
 
   const handleBayCollected = (bay: { id: number; code: string }) => {
     setCurrentBay(bay);
-    setCurrentStep("addItems");
+    setStep("addItems");
   };
 
   const handleFinishItems = async () => {
-    if (currentBay) {
+    if (currentBay?.id) {
       await BayRepository.finalizeBay(currentBay.id);
     }
     setCurrentBay(null);
-    setCurrentStep("scanBay");
+    setStep("scanBay");
   };
 
   return (
@@ -40,7 +34,7 @@ const App = () => {
 
       {currentStep === "addItems" && currentBay && (
         <div className="w-full max-w-md flex flex-col gap-4 mx-auto">
-          <ItemScreen bayId={currentBay.id} bayCode={currentBay.code} />
+          <ItemScreen bayId={currentBay.id!} bayCode={currentBay.code} />
 
           <Button
             variant="outline"
@@ -62,17 +56,17 @@ const App = () => {
           {
             icon: <ScanBarcode size={18} />,
             label: "Scan Bay",
-            onClick: () => setCurrentStep("scanBay"),
+            onClick: () => setStep("scanBay"),
           },
           {
             icon: <List size={18} />,
             label: "View Bays & Items",
-            onClick: () => setCurrentStep("viewList"),
+            onClick: () => setStep("viewList"),
           },
           {
             icon: <UploadCloud size={18} />,
             label: "Upload",
-            onClick: () => setCurrentStep("upload"),
+            onClick: () => setStep("upload"),
           },
         ]}
       />
