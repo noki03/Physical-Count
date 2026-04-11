@@ -33,6 +33,10 @@ interface ConfirmationDialogProps {
     | "secondary"
     | "ghost"
     | "link";
+  /** Optional controlled open state for the dialog. */
+  open?: boolean;
+  /** Optional callback when dialog open state changes. */
+  onOpenChange?: (open: boolean) => void;
 }
 
 /**
@@ -46,9 +50,11 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   confirmText = "Continue",
   cancelText = "Cancel",
   confirmVariant = "destructive",
+  open,
+  onOpenChange,
 }) => {
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

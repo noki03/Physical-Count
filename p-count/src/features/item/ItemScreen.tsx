@@ -1,23 +1,13 @@
 // item/ItemScreen.tsx
 import React, { useState } from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 import { useItemData } from "./hooks/useItemData";
 import { ItemHeader } from "./components/ItemHeader";
 import { ItemForm } from "./components/ItemForm";
 import { ItemList } from "./components/ItemList";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
 
 interface ItemScreenProps {
   bayId: number;
@@ -95,26 +85,16 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
       </Card>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog
+      <ConfirmationDialog
+        trigger={<div />} // Hidden trigger - controlled by state
+        title="Delete Item"
+        description="Are you sure you want to delete this item? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
+        confirmText="Delete"
+        confirmVariant="destructive"
         open={itemToDelete !== null}
         onOpenChange={(open: boolean) => !open && setItemToDelete(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Item</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete this item? This action cannot be
-              undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete} asChild>
-              <Button variant="destructive">Delete</Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      />
     </div>
   );
 };
