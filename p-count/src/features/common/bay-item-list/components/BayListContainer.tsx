@@ -1,5 +1,6 @@
 // src/features/common/bay-item-list/components/BayItemCard.tsx -> BayListContainer.tsx
-import React from "react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 interface BayListContainerProps {
@@ -12,9 +13,9 @@ interface BayListContainerProps {
 }
 
 // Number formatting helper for large numbers
-const formatNumber = (num: number) =>
+const formatNumber = (num: number, isExact: boolean) =>
   new Intl.NumberFormat("en-US", {
-    notation: num > 999999 ? "compact" : "standard",
+    notation: !isExact && num > 999999 ? "compact" : "standard",
   }).format(num);
 
 export const BayListContainer: React.FC<BayListContainerProps> = ({
@@ -25,6 +26,9 @@ export const BayListContainer: React.FC<BayListContainerProps> = ({
   totalRecords,
   totalUnits,
 }) => {
+  const [expandedMetric, setExpandedMetric] = useState<
+    "bays" | "items" | "units" | null
+  >(null);
   return (
     <Card className="border-border px-1">
       <CardHeader>
@@ -34,30 +38,66 @@ export const BayListContainer: React.FC<BayListContainerProps> = ({
         {totalBays !== undefined &&
           totalRecords !== undefined &&
           totalUnits !== undefined && (
-            <div className="grid grid-cols-3 gap-4 divide-x divide-border mt-4">
-              <div className="flex flex-col items-center justify-center text-center">
-                <span className="text-2xl font-bold tracking-tight truncate w-full">
-                  {formatNumber(totalBays)}
-                </span>
-                <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-1">
-                  BAYS
-                </span>
+            <div>
+              <div className="grid grid-cols-3 w-full divide-x divide-border overflow-hidden rounded-md border border-border/50">
+                {/* Bays Metric */}
+                <div
+                  onClick={() =>
+                    setExpandedMetric(expandedMetric === "bays" ? null : "bays")
+                  }
+                  className="flex flex-col items-center justify-center py-3 cursor-pointer transition-colors active:bg-muted/50"
+                >
+                  <span
+                    className={`font-bold tracking-tight truncate w-full text-center px-1 transition-all ${expandedMetric === "bays" ? "text-lg" : "text-2xl"}`}
+                  >
+                    {formatNumber(totalBays, expandedMetric === "bays")}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-1">
+                    Bays
+                  </span>
+                </div>
+
+                {/* Items Metric */}
+                <div
+                  onClick={() =>
+                    setExpandedMetric(
+                      expandedMetric === "items" ? null : "items",
+                    )
+                  }
+                  className="flex flex-col items-center justify-center py-3 cursor-pointer transition-colors active:bg-muted/50"
+                >
+                  <span
+                    className={`font-bold tracking-tight truncate w-full text-center px-1 transition-all ${expandedMetric === "items" ? "text-lg" : "text-2xl"}`}
+                  >
+                    {formatNumber(totalRecords, expandedMetric === "items")}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-1">
+                    Items
+                  </span>
+                </div>
+
+                {/* Units Metric */}
+                <div
+                  onClick={() =>
+                    setExpandedMetric(
+                      expandedMetric === "units" ? null : "units",
+                    )
+                  }
+                  className="flex flex-col items-center justify-center py-3 cursor-pointer transition-colors active:bg-muted/50"
+                >
+                  <span
+                    className={`font-bold tracking-tight truncate w-full text-center px-1 transition-all ${expandedMetric === "units" ? "text-lg" : "text-2xl"}`}
+                  >
+                    {formatNumber(totalUnits, expandedMetric === "units")}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-1">
+                    Units
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col items-center justify-center text-center">
-                <span className="text-2xl font-bold tracking-tight truncate w-full">
-                  {formatNumber(totalRecords)}
-                </span>
-                <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-1">
-                  ITEMS
-                </span>
-              </div>
-              <div className="flex flex-col items-center justify-center text-center">
-                <span className="text-2xl font-bold tracking-tight truncate w-full">
-                  {formatNumber(totalUnits)}
-                </span>
-                <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-1">
-                  UNITS
-                </span>
+
+              <div className="text-center mt-3 text-[10px] text-muted-foreground animate-pulse">
+                Tap a metric to see exact numbers
               </div>
             </div>
           )}

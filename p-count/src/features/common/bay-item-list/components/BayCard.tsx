@@ -8,6 +8,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { BayItemDialog } from "./BayItemDialog";
 import { DeleteBayButton } from "./DeleteBayButton";
 
@@ -21,9 +22,19 @@ export const BayCard: React.FC<BayCardProps> = ({ bay, onDeleteBay }) => {
     <Card className="border shadow-none mb-1 p-2 rounded-sm">
       <CardHeader className="flex flex-row justify-between items-center px-2 py-0">
         <div>
-          <CardTitle className="text-sm font-semibold leading-tight">
-            {bay.code}
-          </CardTitle>
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-sm font-semibold leading-tight">
+              {bay.code}
+            </CardTitle>
+            {bay.isUploaded && (
+              <Badge
+                variant="outline"
+                className="ml-2 bg-green-50 text-green-700 border-green-200"
+              >
+                Synced
+              </Badge>
+            )}
+          </div>
           <CardDescription className="text-[10px] text-muted-foreground leading-tight">
             {bay.items.length} {bay.items.length === 1 ? "item" : "items"}
           </CardDescription>

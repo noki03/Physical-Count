@@ -20,6 +20,8 @@
 
 - [x] Add aggregate totals (Bays & Items) to Review Screen
 - [x] Redesign Review Screen UI with 3-metric dashboard and scroll constraints
+- [x] Implement local sync state (isUploaded) and session reset routing
+- [x] Add tap-to-toggle exact metrics for mobile and visual 'Synced' badges
 
 ## Future Phases
 
