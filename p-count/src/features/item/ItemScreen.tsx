@@ -1,12 +1,23 @@
 // item/ItemScreen.tsx
 import React, { useState } from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 import { useItemData } from "./hooks/useItemData";
 import { ItemHeader } from "./components/ItemHeader";
 import { ItemForm } from "./components/ItemForm";
 import { ItemList } from "./components/ItemList";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ItemScreenProps {
   bayId: number;
@@ -17,8 +28,10 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
   const [itemCode, setItemCode] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState("");
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
-  const { items, addItem, isAdding, isLoading } = useItemData(bayId);
+  const { items, addItem, deleteItem, isAdding, isLoading } =
+    useItemData(bayId);
 
   const handleAddItem = async () => {
     if (!itemCode.trim()) return setError("Please enter or scan an item code.");
@@ -43,6 +56,18 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
     }
   };
 
+  const handleConfirmDelete = async () => {
+    if (itemToDelete === null) return;
+
+    try {
+      await deleteItem(itemToDelete);
+      toast.success("Item deleted successfully!");
+      setItemToDelete(null);
+    } catch {
+      toast.error("Failed to delete item. Please try again.");
+    }
+  };
+
   return (
     <div className="w-full max-w-md mx-auto mt-8">
       <Card className="border-border">
@@ -61,9 +86,35 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
             isAdding={isAdding}
           />
 
-          <ItemList items={items} isLoading={isLoading} />
+          <ItemList
+            items={items}
+            isLoading={isLoading}
+            onDeleteClick={(id) => setItemToDelete(id)}
+          />
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        open={itemToDelete !== null}
+        onOpenChange={(open: boolean) => !open && setItemToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Item</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this item? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete} asChild>
+              <Button variant="destructive">Delete</Button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

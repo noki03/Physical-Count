@@ -7,9 +7,11 @@ import type { Item } from "../types";
 export const ItemList = ({
   items,
   isLoading,
+  onDeleteClick,
 }: {
   items: Item[];
   isLoading: boolean;
+  onDeleteClick?: (id: number) => void;
 }) => {
   if (isLoading)
     return (
@@ -37,8 +39,8 @@ export const ItemList = ({
       </CardHeader>
 
       <CardContent className="px-2 pt-0">
-        <div className="flex flex-col divide-y divide-border text-sm">
-          {items.map((i) => (
+        <div className="flex flex-col divide-y divide-border text-sm max-h-64 overflow-y-auto pr-2">
+          {[...items].reverse().map((i) => (
             <div key={i.id} className="flex items-center justify-between py-2">
               {/* Left side */}
               <div className="flex flex-col">
@@ -66,7 +68,7 @@ export const ItemList = ({
                 variant="ghost"
                 className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
                 onClick={() => {
-                  // TODO: add confirmation dialog for delete item
+                  onDeleteClick?.(i.id!);
                 }}
               >
                 <Trash2 className="h-4 w-4" />

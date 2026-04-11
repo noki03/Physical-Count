@@ -13,6 +13,8 @@
 
 - [x] Implement animated theme toggle
 - [x] Add mobile-specific HTML attributes (inputMode, enterKeyHint) to forms
+- [x] Reverse Item List sorting (newest first) and add internal scroll
+- [x] Implement item deletion with custom confirmation dialog
 
 ## Future Phases
 
