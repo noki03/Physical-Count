@@ -8,6 +8,7 @@ import { ItemHeader } from "./components/ItemHeader";
 import { ItemForm } from "./components/ItemForm";
 import { ItemList } from "./components/ItemList";
 import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
+import type { Item } from "./types";
 
 interface ItemScreenProps {
   bayId: number;
@@ -18,7 +19,7 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
   const [itemCode, setItemCode] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState("");
-  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<Item | null>(null);
 
   const { items, addItem, deleteItem, isAdding, isLoading } =
     useItemData(bayId);
@@ -47,10 +48,10 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
   };
 
   const handleConfirmDelete = async () => {
-    if (itemToDelete === null) return;
+    if (!itemToDelete?.id) return;
 
     try {
-      await deleteItem(itemToDelete);
+      await deleteItem(itemToDelete.id);
       toast.success("Item deleted successfully!");
       setItemToDelete(null);
     } catch {
@@ -79,7 +80,7 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
           <ItemList
             items={items}
             isLoading={isLoading}
-            onDeleteClick={(id) => setItemToDelete(id)}
+            onDeleteClick={(item) => setItemToDelete(item)}
           />
         </CardContent>
       </Card>
@@ -87,8 +88,16 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
       {/* Delete Confirmation Dialog */}
       <ConfirmationDialog
         trigger={<div />} // Hidden trigger - controlled by state
-        title="Delete Item"
-        description="Are you sure you want to delete this item? This action cannot be undone."
+        title={
+          itemToDelete
+            ? `Delete Item: ${itemToDelete.itemCode}?`
+            : "Delete Item"
+        }
+        description={
+          itemToDelete
+            ? `Are you sure you want to permanently delete item ${itemToDelete.itemCode} (Qty: ${itemToDelete.quantity})?`
+            : ""
+        }
         onConfirm={handleConfirmDelete}
         confirmText="Delete"
         confirmVariant="destructive"

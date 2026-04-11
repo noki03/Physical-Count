@@ -11,7 +11,7 @@ export const ItemList = ({
 }: {
   items: Item[];
   isLoading: boolean;
-  onDeleteClick?: (id: number) => void;
+  onDeleteClick?: (item: Item) => void;
 }) => {
   if (isLoading)
     return (
@@ -68,7 +68,7 @@ export const ItemList = ({
                 variant="ghost"
                 className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
                 onClick={() => {
-                  onDeleteClick?.(i.id!);
+                  onDeleteClick?.(i);
                 }}
               >
                 <Trash2 className="h-4 w-4" />

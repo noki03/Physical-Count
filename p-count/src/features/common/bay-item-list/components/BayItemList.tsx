@@ -25,10 +25,6 @@ export const BayItemList: React.FC<BayItemListProps> = ({
     <>
       <ul className="overflow-hidden">
         {items.map((item) => {
-          const handleDeleteClick = (item: Item) => {
-            setItemToDelete(item);
-          };
-
           return (
             <li
               key={item.id}
@@ -57,7 +53,7 @@ export const BayItemList: React.FC<BayItemListProps> = ({
                 type="button"
                 className="text-muted-foreground hover:text-destructive transition-colors p-1 rounded"
                 aria-label={`Delete ${item.itemCode}`}
-                onClick={() => handleDeleteClick(item)}
+                onClick={() => setItemToDelete(item)}
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -80,9 +76,9 @@ export const BayItemList: React.FC<BayItemListProps> = ({
             ? `Are you sure you want to permanently delete the record for item ${itemToDelete.itemCode} (Qty: ${itemToDelete.quantity})?`
             : ""
         }
-        onConfirm={() => {
-          if (itemToDelete && onDeleteItem) {
-            onDeleteItem(itemToDelete.id!);
+        onConfirm={async () => {
+          if (itemToDelete?.id && onDeleteItem) {
+            await Promise.resolve(onDeleteItem(itemToDelete.id));
             setItemToDelete(null);
           }
         }}

@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+const FOCUS_DELAY_MS = 50;
+
 interface ItemFormProps {
   itemCode: string;
   quantity: number;
@@ -40,7 +42,7 @@ export const ItemForm: React.FC<ItemFormProps> = ({
       setTimeout(() => {
         itemInputRef.current?.focus();
         itemInputRef.current?.select();
-      }, 50);
+      }, FOCUS_DELAY_MS);
     }
   };
 
