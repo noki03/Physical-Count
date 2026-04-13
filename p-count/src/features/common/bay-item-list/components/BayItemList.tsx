@@ -36,6 +36,11 @@ export const BayItemList: React.FC<BayItemListProps> = ({
                   <span className="font-medium tracking-tight">
                     {item.itemCode}
                   </span>
+                  {item.isUploaded && (
+                    <span className="ml-2 text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-medium">
+                      Synced
+                    </span>
+                  )}
                   <span className="text-xs font-medium bg-muted px-1.5 py-0.5 rounded">
                     Qty: {item.quantity}
                   </span>

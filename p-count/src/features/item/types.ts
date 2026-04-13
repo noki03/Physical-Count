@@ -7,4 +7,5 @@ export interface Item {
   itemCode: string;
   quantity: number;
   timestamp?: number;
+  isUploaded?: boolean; // Upload sync state
 }

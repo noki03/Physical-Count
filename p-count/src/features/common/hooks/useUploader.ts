@@ -24,10 +24,11 @@ export const useUploader = () => {
         ? shouldReset
           ? "Upload successful and local data cleared!"
           : "Upload successful!"
-        : "Upload failed. Please try again."
+        : "Upload failed. Please try again.",
     );
 
     setIsUploading(false);
+    return result;
   };
 
   return {

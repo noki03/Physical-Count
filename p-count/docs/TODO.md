@@ -16,6 +16,13 @@
 - [x] Reverse Item List sorting (newest first) and add internal scroll
 - [x] Implement item deletion with custom confirmation dialog
 
+### Phase 3: Review & Upload Scaffolding
+
+- [x] Add aggregate totals (Bays & Items) to Review Screen
+- [x] Redesign Review Screen UI with 3-metric dashboard and scroll constraints
+- [x] Implement local sync state (isUploaded) and session reset routing
+- [x] Add tap-to-toggle exact metrics for mobile and visual 'Synced' badges
+
 ## Future Phases
 
 - [ ] Theme toggle UI implementation
