@@ -1,6 +1,5 @@
 // item/ItemScreen.tsx
 import React, { useState } from "react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 
 import { useItemData } from "./hooks/useItemData";
@@ -8,14 +7,21 @@ import { ItemHeader } from "./components/ItemHeader";
 import { ItemForm } from "./components/ItemForm";
 import { ItemList } from "./components/ItemList";
 import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
+import { BottomActionBar } from "@/components/layout/BottomActionBar";
+import { Button } from "@/components/ui/button";
 import type { Item } from "./types";
 
 interface ItemScreenProps {
   bayId: number;
   bayCode: string;
+  onFinishItems?: () => void;
 }
 
-const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
+const ItemScreen: React.FC<ItemScreenProps> = ({
+  bayId,
+  bayCode,
+  onFinishItems,
+}) => {
   const [itemCode, setItemCode] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState("");
@@ -60,30 +66,34 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto mt-8">
-      <Card className="border-border">
-        <CardHeader>
-          <ItemHeader bayCode={bayCode} />
-        </CardHeader>
+    <div className="w-full max-w-md mx-auto mt-8 px-4 pb-24 ">
+      <div className="mb-6">
+        <ItemHeader bayCode={bayCode} />
+      </div>
 
-        <CardContent className="px-3.5 ">
-          <ItemForm
-            itemCode={itemCode}
-            quantity={quantity}
-            error={error}
-            onItemCodeChange={setItemCode}
-            onQuantityChange={setQuantity}
-            onSubmit={handleAddItem}
-            isAdding={isAdding}
-          />
+      <div className="space-y-6 ">
+        <ItemForm
+          itemCode={itemCode}
+          quantity={quantity}
+          error={error}
+          onItemCodeChange={setItemCode}
+          onQuantityChange={setQuantity}
+          onSubmit={handleAddItem}
+          isAdding={isAdding}
+        />
 
-          <ItemList
-            items={items}
-            isLoading={isLoading}
-            onDeleteClick={(item) => setItemToDelete(item)}
-          />
-        </CardContent>
-      </Card>
+        <ItemList
+          items={items}
+          isLoading={isLoading}
+          onDeleteClick={(item) => setItemToDelete(item)}
+        />
+      </div>
+
+      <BottomActionBar>
+        <Button variant="outline" onClick={onFinishItems} className="w-full">
+          Finish and Scan Another Bay
+        </Button>
+      </BottomActionBar>
 
       {/* Delete Confirmation Dialog */}
       <ConfirmationDialog

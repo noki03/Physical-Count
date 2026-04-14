@@ -4,7 +4,6 @@ import ItemScreen from "@/features/item/ItemScreen";
 import UploadScreen from "@/features/common/upload/UploadScreen";
 import { BayRepository } from "@/lib/db/repositories/bayRepository";
 import { Toaster } from "@/components/ui/sonner";
-import { Button } from "@/components/ui/button";
 import { BayItemListScreen } from "@/features/common/bay-item-list/BayItemListScreen";
 import Header from "@/components/layout/Header";
 import { BottomNav } from "@/components/layout/BottomNav";
@@ -35,17 +34,11 @@ const App = () => {
         )}
 
         {currentStep === "addItems" && currentBay && (
-          <div className="w-full max-w-md flex flex-col gap-4 mx-auto">
-            <ItemScreen bayId={currentBay.id!} bayCode={currentBay.code} />
-
-            <Button
-              variant="outline"
-              onClick={handleFinishItems}
-              className="w-full"
-            >
-              Finish and Scan Another Bay
-            </Button>
-          </div>
+          <ItemScreen
+            bayId={currentBay.id!}
+            bayCode={currentBay.code}
+            onFinishItems={handleFinishItems}
+          />
         )}
 
         {currentStep === "viewList" && <BayItemListScreen />}
