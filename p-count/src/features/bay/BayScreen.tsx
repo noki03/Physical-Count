@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useBayData } from "./hooks/useBayData";
 import { BayForm } from "./components/BayForm";
+import { BottomActionBar } from "@/components/layout/BottomActionBar";
+import { Button } from "@/components/ui/button";
 
 interface BayScreenProps {
   onBayCollected?: (bay: { id: number; code: string }) => void;
@@ -34,25 +35,34 @@ const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
   const isLoading = addBayStatus === "pending";
 
   return (
-    <div className="w-full max-w-md mx-auto mt-8">
-      <Card className="border-border">
-        <CardHeader>
-          <h1 className="text-xl font-semibold text-center">P-Count System</h1>
-          <p className="text-sm text-muted-foreground text-center">
-            Identify a bay before scanning items.
-          </p>
-        </CardHeader>
+    <div className="w-full max-w-md mx-auto mt-8 px-4 pb-24 pt-8">
+      <div className="text-center mb-8">
+        <h1 className="text-2xl font-bold">P-Count System</h1>
+        <p className="text-sm text-muted-foreground mt-2">
+          Identify a bay before scanning items.
+        </p>
+      </div>
 
-        <CardContent className="px-3.5">
-          <BayForm
-            bayCode={bayCode}
-            error={error}
-            isLoading={isLoading}
-            onChange={setBayCode}
-            onSubmit={handleCollect}
-          />
-        </CardContent>
-      </Card>
+      <div className="space-y-4">
+        <BayForm
+          bayCode={bayCode}
+          error={error}
+          isLoading={isLoading}
+          onChange={setBayCode}
+          onSubmit={handleCollect}
+        />
+      </div>
+
+      <BottomActionBar>
+        <Button
+          onClick={handleCollect}
+          className="w-full"
+          disabled={isLoading}
+          size="default"
+        >
+          {isLoading ? "Collecting..." : "Collect Bay"}
+        </Button>
+      </BottomActionBar>
     </div>
   );
 };
