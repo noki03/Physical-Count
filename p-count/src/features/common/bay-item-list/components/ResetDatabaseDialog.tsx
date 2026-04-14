@@ -35,8 +35,7 @@ export const ResetDatabaseDialog: React.FC<ResetDatabaseDialogProps> = ({
       <AlertDialogTrigger asChild>
         <Button
           variant="outline"
-          size="sm"
-          className="w-full gap-2 text-muted-foreground "
+          className="w-full gap-2 text-destructive border-destructive hover:bg-destructive/10"
           disabled={resetting}
         >
           <Trash2 className="h-4 w-4" />

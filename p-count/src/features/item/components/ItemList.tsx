@@ -32,12 +32,12 @@ export const ItemList = ({
     });
 
   return (
-    <div className="flex flex-col divide-y divide-border border-y border-border/50 bg-background mt-4 ">
+    <div className="flex flex-col divide-y divide-border/40 mt-4">
       <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-2">
         Current Items
       </h3>
 
-      <div className="flex flex-col divide-y divide-border text-sm max-h-68 overflow-y-auto">
+      <div className="flex flex-col divide-y divide-border/40 text-sm max-h-68 overflow-y-auto">
         {[...items].reverse().map((i) => (
           <div
             key={i.id}

@@ -43,7 +43,7 @@ export const BayListContainer: React.FC<BayListContainerProps> = ({
           totalRecords !== undefined &&
           totalUnits !== undefined && (
             <div>
-              <div className="flex w-full divide-x divide-border overflow-hidden rounded-md border border-border/50 bg-card">
+              <div className="flex w-full divide-x divide-border/50 overflow-hidden bg-transparent mb-2">
                 {/* Bays Metric */}
                 <motion.div
                   layout
@@ -154,7 +154,7 @@ export const BayListContainer: React.FC<BayListContainerProps> = ({
             </div>
           )}
       </div>
-      <div className="max-h-[60vh] overflow-y-auto flex flex-col divide-y divide-border border-t border-border/50 bg-background">
+      <div className="max-h-[55vh] overflow-y-auto flex flex-col divide-y divide-border/40 bg-background mt-4">
         {children}
       </div>
     </div>

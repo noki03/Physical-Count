@@ -1,5 +1,6 @@
 // src/features/common/bay-item-list/BayItemListScreen.tsx
 import React from "react";
+import { PackageOpen } from "lucide-react";
 import { useBayItemList } from "./hooks/useBayItemList";
 import { ResetDatabaseDialog } from "./components/ResetDatabaseDialog";
 import { BayCard } from "./components/BayCard";
@@ -31,8 +32,20 @@ export const BayItemListScreen: React.FC = () => {
 
   if (bays.length === 0) {
     return (
-      <div className="w-full mt-8 text-center space-y-4">
-        <p className="text-sm text-muted-foreground">No bays collected yet.</p>
+      <div className="flex flex-col items-center justify-center h-[60vh] px-4 text-center animate-in fade-in duration-500">
+        <div className="bg-muted/30 p-6 rounded-full mb-5">
+          <PackageOpen
+            className="size-12 text-muted-foreground/50"
+            strokeWidth={1.5}
+          />
+        </div>
+        <h3 className="text-xl font-semibold text-foreground tracking-tight mb-2">
+          No bays collected
+        </h3>
+        <p className="text-sm text-muted-foreground max-w-[250px]">
+          Your scanned bays and inventory items will appear here. Head over to
+          the Scan tab to get started.
+        </p>
       </div>
     );
   }
@@ -45,7 +58,7 @@ export const BayItemListScreen: React.FC = () => {
         totalRecords={totalRecords}
         totalUnits={totalUnits}
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col divide-y divide-border/70 ">
           {bays.map((bay) => (
             <BayCard key={bay.id} bay={bay} onDeleteBay={handleDeleteBay} />
           ))}

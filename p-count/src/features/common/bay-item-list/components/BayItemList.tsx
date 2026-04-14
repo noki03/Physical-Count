@@ -23,7 +23,7 @@ export const BayItemList: React.FC<BayItemListProps> = ({
 
   return (
     <>
-      <div className="flex flex-col divide-y divide-border border-y border-border/50 mt-4">
+      <div className="flex flex-col divide-y divide-border/70 mt-4 ">
         {items.map((item) => {
           return (
             <div

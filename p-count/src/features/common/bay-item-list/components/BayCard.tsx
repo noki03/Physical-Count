@@ -12,7 +12,7 @@ interface BayCardProps {
 
 export const BayCard: React.FC<BayCardProps> = ({ bay, onDeleteBay }) => {
   return (
-    <div className="flex items-center justify-between p-4 bg-background hover:bg-muted/50 transition-colors">
+    <div className="flex items-center justify-between p-4 bg-background hover:bg-muted/50 transition-colors ">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <span className="font-semibold">{bay.code}</span>
