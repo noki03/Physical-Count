@@ -1,3 +1,8 @@
+/**
+ * DASHBOARD BAYS LIST (REVIEW SCREEN)
+ * The main review dashboard showing aggregate metrics and a list of all collected Bays.
+ * Uses BayCard for individual rows.
+ */
 // src/features/common/bay-item-list/BayItemListScreen.tsx
 import React from "react";
 import { PackageOpen } from "lucide-react";

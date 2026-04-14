@@ -1,4 +1,9 @@
-// item/ItemScreen.tsx
+/**
+ * ACTIVE SCANNING LIST
+ * Renders the UI for actively scanning new items into the current Bay.
+ * Includes the input field and the real-time list of scanned items.
+ */
+
 import React, { useState } from "react";
 import { toast } from "sonner";
 

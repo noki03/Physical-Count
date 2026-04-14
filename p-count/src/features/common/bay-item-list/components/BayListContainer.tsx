@@ -1,3 +1,8 @@
+/**
+ * DASHBOARD BAYS LIST - CONTAINER
+ * Wraps mapped BayCards and houses the 3-Metric Dashboard (Bays, Items, Units).
+ * Used inside BayItemListScreen.
+ */
 // src/features/common/bay-item-list/components/BayItemCard.tsx -> BayListContainer.tsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";

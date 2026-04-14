@@ -1,3 +1,8 @@
+/**
+ * ACTIVE SCANNING LIST - ROW RENDERER
+ * Maps and renders individual scanned items for the active Bay.
+ * Contains direct Delete button (Trash2) for individual active items.
+ */
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";

@@ -1,3 +1,8 @@
+/**
+ * DASHBOARD BAYS LIST - INDIVIDUAL ROW
+ * Represents a single saved Bay in the Review dashboard.
+ * Houses View (Dialog Trigger) and DeleteBayButton actions.
+ */
 // Updated BayCard.tsx with delete icon button
 import React from "react";
 import type { Bay } from "@/features/bay/types";

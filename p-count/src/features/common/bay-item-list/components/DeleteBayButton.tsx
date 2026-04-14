@@ -1,3 +1,8 @@
+/**
+ * DASHBOARD BAYS LIST - DELETE ACTION
+ * Extracted delete button component for BayCard.
+ * Handles confirmation dialog for deleting an entire Bay.
+ */
 // src/features/common/bay-item-list/components/DeleteBayButton.tsx
 import React from "react";
 import { Button } from "@/components/ui/button";

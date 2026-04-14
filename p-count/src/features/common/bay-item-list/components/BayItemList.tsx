@@ -1,3 +1,8 @@
+/**
+ * DASHBOARD INNER ITEMS LIST (DIALOG)
+ * The modal/dialog view that displays the specific items inside a previously saved Bay.
+ * Triggered by clicking a BayCard on the Review Screen.
+ */
 import React, { useState } from "react";
 import { Barcode } from "lucide-react";
 import type { Item } from "@/features/item/types";
