@@ -63,7 +63,7 @@ const ItemScreen: React.FC<ItemScreenProps> = ({
 
     try {
       await deleteItem(itemToDelete.id);
-      toast.success("Item deleted successfully!");
+      toast.success(`Item ${itemToDelete.itemCode} removed`);
       setItemToDelete(null);
     } catch {
       toast.error("Failed to delete item. Please try again.");

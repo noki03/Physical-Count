@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogTrigger,
@@ -76,7 +77,18 @@ export const BayItemDialog: React.FC<BayItemDialogProps> = ({ bay }) => {
         <div className="flex-1 overflow-y-auto p-2">
           <BayItemList
             items={bay.items}
-            onDeleteItem={(id) => deleteItem(id)}
+            onDeleteItem={(id) => {
+              const item = bay.items.find((item) => item.id === id);
+              if (item) {
+                deleteItem(id)
+                  .then(() => {
+                    toast.success(`Item ${item.itemCode} removed`);
+                  })
+                  .catch(() => {
+                    toast.error("Failed to delete item. Please try again.");
+                  });
+              }
+            }}
           />
         </div>
 
