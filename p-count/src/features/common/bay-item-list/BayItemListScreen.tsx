@@ -5,7 +5,6 @@
  */
 // src/features/common/bay-item-list/BayItemListScreen.tsx
 import React from "react";
-import { toast } from "sonner";
 import { PackageOpen } from "lucide-react";
 import { useBayItemList } from "./hooks/useBayItemList";
 import { ResetDatabaseDialog } from "./components/ResetDatabaseDialog";
@@ -16,14 +15,6 @@ import { BottomActionBar } from "@/components/layout/BottomActionBar";
 export const BayItemListScreen: React.FC = () => {
   const { bays, loading, resetting, handleReset, handleDeleteBay } =
     useBayItemList();
-
-  const handleDeleteBayWithToast = (id: number) => {
-    const bay = bays.find((b) => b.id === id);
-    if (bay) {
-      handleDeleteBay(id);
-      toast.success(`Bay ${bay.code} deleted`);
-    }
-  };
 
   // Calculate aggregates for summary display
   const totalBays = bays.length;
@@ -77,7 +68,11 @@ export const BayItemListScreen: React.FC = () => {
             <BayCard
               key={bay.id}
               bay={bay}
-              onDeleteBay={handleDeleteBayWithToast}
+              onDeleteBay={() => {
+                if (bay.id) {
+                  handleDeleteBay({ id: bay.id, code: bay.code });
+                }
+              }}
             />
           ))}
         </div>

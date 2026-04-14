@@ -62,11 +62,14 @@ const ItemScreen: React.FC<ItemScreenProps> = ({
     if (!itemToDelete?.id) return;
 
     try {
-      await deleteItem(itemToDelete.id);
-      toast.success(`Item ${itemToDelete.itemCode} removed`);
-      setItemToDelete(null);
-    } catch {
-      toast.error("Failed to delete item. Please try again.");
+      await deleteItem({
+        id: itemToDelete.id,
+        itemCode: itemToDelete.itemCode,
+      });
+      setItemToDelete(null); // Keep UI state reset in the UI layer
+    } catch (error) {
+      // Error toast is now handled by the data layer
+      console.error("Deletion failed:", error);
     }
   };
 

@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { ItemRepository } from "@/lib/db/repositories/itemRepository";
 import type { Item } from "../types";
 
@@ -26,12 +27,17 @@ export const useItemData = (bayId?: number) => {
   });
 
   const deleteItemMutation = useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async ({ id }: { id: number; itemCode: string }) => {
       return await ItemRepository.deleteItem(id);
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["items", bayId] });
       queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
+      // Using the neutral default toast for deletions
+      toast.info(`Item ${variables.itemCode} removed (dialog)`);
+    },
+    onError: () => {
+      toast.error("Failed to delete item. Please try again.");
     },
   });
 
