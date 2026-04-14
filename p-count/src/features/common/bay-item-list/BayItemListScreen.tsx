@@ -4,6 +4,7 @@ import { useBayItemList } from "./hooks/useBayItemList";
 import { ResetDatabaseDialog } from "./components/ResetDatabaseDialog";
 import { BayCard } from "./components/BayCard";
 import { BayListContainer } from "./components/BayListContainer";
+import { BottomActionBar } from "@/components/layout/BottomActionBar";
 
 export const BayItemListScreen: React.FC = () => {
   const { bays, loading, resetting, handleReset, handleDeleteBay } =
@@ -30,34 +31,30 @@ export const BayItemListScreen: React.FC = () => {
 
   if (bays.length === 0) {
     return (
-      <div className="w-full max-w-md mx-auto mt-8 text-center space-y-4">
+      <div className="w-full mt-8 text-center space-y-4">
         <p className="text-sm text-muted-foreground">No bays collected yet.</p>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-lg mx-auto mt-8 space-y-4 p-0 ">
+    <div className="w-full pb-24 flex flex-col h-full">
       <BayListContainer
         title="Bays & Items"
         totalBays={totalBays}
         totalRecords={totalRecords}
         totalUnits={totalUnits}
       >
-        <div className="space-y-3">
+        <div className="flex flex-col">
           {bays.map((bay) => (
-            <BayCard
-              key={bay.id}
-              bay={bay}
-              onDeleteBay={handleDeleteBay} // 👈 NEW
-            />
+            <BayCard key={bay.id} bay={bay} onDeleteBay={handleDeleteBay} />
           ))}
         </div>
       </BayListContainer>
 
-      <div className="text-center">
+      <BottomActionBar>
         <ResetDatabaseDialog onConfirm={handleReset} resetting={resetting} />
-      </div>
+      </BottomActionBar>
     </div>
   );
 };

@@ -23,21 +23,19 @@ export const BayItemList: React.FC<BayItemListProps> = ({
 
   return (
     <>
-      <ul className="overflow-hidden">
+      <div className="flex flex-col divide-y divide-border border-y border-border/50 mt-4">
         {items.map((item) => {
           return (
-            <li
+            <div
               key={item.id}
-              className="py-2 px-2 flex justify-between items-start text-sm hover:bg-muted/40 transition-colors border border-border rounded mb-0.5"
+              className="flex items-center justify-between p-4 bg-background"
             >
               {/* Left section  */}
-              <div className="flex flex-col leading-tight">
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium tracking-tight">
-                    {item.itemCode}
-                  </span>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">{item.itemCode}</span>
                   {item.isUploaded && (
-                    <span className="ml-2 text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-medium">
+                    <span className="text-[10px] font-medium bg-green-500/15 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full">
                       Synced
                     </span>
                   )}
@@ -62,10 +60,10 @@ export const BayItemList: React.FC<BayItemListProps> = ({
               >
                 <Trash2 className="w-4 h-4" />
               </button>
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
 
       {/* Single Delete Confirmation Dialog */}
       <ConfirmationDialog
