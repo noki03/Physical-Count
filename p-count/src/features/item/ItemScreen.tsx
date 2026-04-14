@@ -5,7 +5,6 @@
  */
 
 import React, { useState } from "react";
-import { toast } from "sonner";
 
 import { useItemData } from "./hooks/useItemData";
 import { ItemHeader } from "./components/ItemHeader";
@@ -50,7 +49,6 @@ const ItemScreen: React.FC<ItemScreenProps> = ({
         timestamp: Date.now(),
       });
 
-      toast.success(`Item ${itemCode} added to bay ${bayCode}!`);
       setItemCode("");
       setQuantity(1);
     } catch {

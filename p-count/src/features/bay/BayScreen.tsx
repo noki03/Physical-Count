@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { toast } from "sonner";
 import { useBayData } from "./hooks/useBayData";
 import { BayForm } from "./components/BayForm";
 import { BottomActionBar } from "@/components/layout/BottomActionBar";
@@ -23,7 +22,6 @@ const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
 
     try {
       const newBay = await addBay(bayCode.trim());
-      toast.success(`Bay ${bayCode} collected successfully!`);
       onBayCollected?.(newBay);
       setBayCode("");
     } catch (err) {

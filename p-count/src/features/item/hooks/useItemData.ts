@@ -21,8 +21,12 @@ export const useItemData = (bayId?: number) => {
     mutationFn: async (item: Omit<Item, "id">) => {
       return await ItemRepository.addItem(item);
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["items", bayId] });
+      toast.success(`Item ${variables.itemCode} added!`);
+    },
+    onError: () => {
+      toast.error("Failed to add item. Please try again.");
     },
   });
 
