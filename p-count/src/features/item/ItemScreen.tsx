@@ -96,7 +96,11 @@ const ItemScreen: React.FC<ItemScreenProps> = ({
       </div>
 
       <BottomActionBar>
-        <Button variant="outline" onClick={onFinishItems} className="w-full">
+        <Button
+          variant="outline"
+          onClick={() => onFinishItems?.()}
+          className="w-full"
+        >
           Finish and Scan Another Bay
         </Button>
       </BottomActionBar>

@@ -38,7 +38,7 @@ export const useItemData = (bayId?: number) => {
       queryClient.invalidateQueries({ queryKey: ["items", bayId] });
       queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
       // Using the neutral default toast for deletions
-      toast.info(`Item ${variables.itemCode} removed (dialog)`);
+      toast.info(`Item ${variables.itemCode} removed`);
     },
     onError: () => {
       toast.error("Failed to delete item. Please try again.");
@@ -53,6 +53,10 @@ export const useItemData = (bayId?: number) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items", bayId] });
       queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
+      toast("All items removed from bay");
+    },
+    onError: () => {
+      toast.error("Failed to clear items. Please try again.");
     },
   });
 

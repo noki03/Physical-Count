@@ -12,7 +12,7 @@ import { DeleteBayButton } from "./DeleteBayButton";
 
 interface BayCardProps {
   bay: Bay & { items: Item[] };
-  onDeleteBay: (id: number) => void;
+  onDeleteBay: (params: { id: number; code: string }) => void;
 }
 
 export const BayCard: React.FC<BayCardProps> = ({ bay, onDeleteBay }) => {
