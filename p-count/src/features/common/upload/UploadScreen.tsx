@@ -1,12 +1,15 @@
 // src/features/bay/UploadScreen.tsx
 import React from "react";
-import { CheckCircle2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { useUploader } from "../hooks/useUploader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAppStore } from "@/store/useAppStore";
 import { CommonRepository } from "@/lib/db/repositories/commonRepository";
 import { BottomActionBar } from "@/components/layout/BottomActionBar";
+import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
+import { UploadSummary } from "./components/UploadSummary";
+import { UploadSuccessState } from "./components/UploadSuccessState";
 
 const UploadScreen: React.FC = () => {
   const { resetSession } = useAppStore();
@@ -19,8 +22,23 @@ const UploadScreen: React.FC = () => {
     setShouldReset,
   } = useUploader();
 
+  // Fetch bays data for summary
+  const { data: bays } = useQuery({
+    queryKey: ["bays-with-items"],
+    queryFn: () => CommonRepository.getBaysWithItems(),
+  });
+
+  // Calculate pending items
+  const pendingBays = bays?.filter((b) => !b.isUploaded) || [];
+  const unsyncedBaysCount = pendingBays.length;
+  const unsyncedItemsCount = pendingBays.reduce(
+    (sum, bay) => sum + (bay.items?.length || 0),
+    0,
+  );
+
   // Check sync state for UI
   const [isAllSynced, setIsAllSynced] = React.useState(false);
+  const [showConfirm, setShowConfirm] = React.useState(false);
 
   React.useEffect(() => {
     const checkSyncState = async () => {
@@ -55,21 +73,18 @@ const UploadScreen: React.FC = () => {
         </p>
       </div>
 
+      {/* Upload Summary */}
+      <div className="px-4 pb-4">
+        <UploadSummary
+          baysCount={unsyncedBaysCount}
+          itemsCount={unsyncedItemsCount}
+        />
+      </div>
+
       {/* Form Area */}
       <div className="flex-1 overflow-y-auto flex flex-col p-4">
         {isAllSynced ? (
-          <div className="flex flex-col items-center justify-center flex-1 space-y-4 text-center mt-12 animate-in zoom-in-95 duration-300">
-            <div className="h-20 w-20 rounded-full bg-green-500/10 flex items-center justify-center">
-              <CheckCircle2 className="h-10 w-10 text-green-500" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-xl font-semibold">All Caught Up!</h3>
-              <p className="text-sm text-muted-foreground max-w-[250px]">
-                All your scanned bays and items have been safely backed up to
-                the cloud.
-              </p>
-            </div>
-          </div>
+          <UploadSuccessState />
         ) : (
           <div className="flex flex-col gap-6">
             <div className="space-y-2">
@@ -101,11 +116,25 @@ const UploadScreen: React.FC = () => {
         )}
       </div>
 
+      {/* Upload Confirmation Dialog */}
+      <ConfirmationDialog
+        trigger={<div className="hidden" />}
+        title="Confirm Upload?"
+        description={`You are about to upload ${unsyncedBaysCount} bays containing ${unsyncedItemsCount} items to the cloud. ${shouldReset ? "Your local session will be cleared afterwards." : ""}`}
+        onConfirm={() => {
+          setShowConfirm(false);
+          handleUploadWithSessionReset();
+        }}
+        confirmText="Upload Now"
+        open={showConfirm}
+        onOpenChange={setShowConfirm}
+      />
+
       {/* Sticky Bottom Action Bar */}
       <BottomActionBar>
         <Button
           className="w-full h-12 rounded-xl text-base font-semibold"
-          onClick={handleUploadWithSessionReset}
+          onClick={() => setShowConfirm(true)}
           disabled={isUploading || isAllSynced}
           variant="outline"
         >
