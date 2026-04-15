@@ -10,6 +10,7 @@ import { BottomActionBar } from "@/components/layout/BottomActionBar";
 import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
 import { UploadSummary } from "./components/UploadSummary";
 import { UploadSuccessState } from "./components/UploadSuccessState";
+import { UploadEmptyState } from "./components/UploadEmptyState";
 
 const UploadScreen: React.FC = () => {
   const { resetSession } = useAppStore();
@@ -28,7 +29,8 @@ const UploadScreen: React.FC = () => {
     queryFn: () => CommonRepository.getBaysWithItems(),
   });
 
-  // Calculate pending items
+  // Calculate pending items and check if empty
+  const isEmpty = bays && bays.length === 0;
   const pendingBays = bays?.filter((b) => !b.isUploaded) || [];
   const unsyncedBaysCount = pendingBays.length;
   const unsyncedItemsCount = pendingBays.reduce(
@@ -83,7 +85,9 @@ const UploadScreen: React.FC = () => {
 
       {/* Form Area */}
       <div className="flex-1 overflow-y-auto flex flex-col p-4">
-        {isAllSynced ? (
+        {isEmpty ? (
+          <UploadEmptyState />
+        ) : isAllSynced ? (
           <UploadSuccessState />
         ) : (
           <div className="flex flex-col gap-6">
@@ -135,14 +139,16 @@ const UploadScreen: React.FC = () => {
         <Button
           className="w-full h-12 rounded-xl text-base font-semibold"
           onClick={() => setShowConfirm(true)}
-          disabled={isUploading || isAllSynced}
+          disabled={isUploading || isAllSynced || isEmpty}
           variant="outline"
         >
           {isUploading
             ? "Uploading..."
-            : isAllSynced
-              ? "Synced"
-              : "Upload to Cloud"}
+            : isEmpty
+              ? "No Data"
+              : isAllSynced
+                ? "Synced"
+                : "Upload to Cloud"}
         </Button>
       </BottomActionBar>
     </div>
