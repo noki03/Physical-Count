@@ -1,11 +1,10 @@
 // src/features/bay/UploadScreen.tsx
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useUploader } from "../hooks/useUploader";
+import { useUploadData } from "../hooks/useUploadData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAppStore } from "@/store/useAppStore";
-import { CommonRepository } from "@/lib/db/repositories/commonRepository";
 import { BottomActionBar } from "@/components/layout/BottomActionBar";
 import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
 import { UploadSummary } from "./components/UploadSummary";
@@ -23,38 +22,16 @@ const UploadScreen: React.FC = () => {
     setShouldReset,
   } = useUploader();
 
-  // Fetch bays data for summary
-  const { data: bays, isLoading } = useQuery({
-    queryKey: ["bays-with-items"],
-    queryFn: () => CommonRepository.getBaysWithItems(),
-  });
+  const {
+    isLoading,
+    isEmpty,
+    unsyncedBaysCount,
+    unsyncedItemsCount,
+    isAllSynced,
+  } = useUploadData();
 
-  // Calculate pending items and check if empty
-  const isEmpty = bays && bays.length === 0;
-  const pendingBays = bays?.filter((b) => !b.isUploaded) || [];
-  const unsyncedBaysCount = pendingBays.length;
-  const unsyncedItemsCount = pendingBays.reduce(
-    (sum, bay) => sum + (bay.items?.length || 0),
-    0,
-  );
-
-  // Check sync state for UI
-  const [isAllSynced, setIsAllSynced] = React.useState(false);
+  // Confirmation dialog state
   const [showConfirm, setShowConfirm] = React.useState(false);
-
-  React.useEffect(() => {
-    const checkSyncState = async () => {
-      const bays = await CommonRepository.getBaysWithItems();
-
-      // Check if no bays exist or all bays are uploaded
-      const hasNoBays = bays.length === 0;
-      const allBaysUploaded =
-        bays.length > 0 && bays.every((bay) => bay.isUploaded);
-      setIsAllSynced(hasNoBays || allBaysUploaded);
-    };
-
-    checkSyncState();
-  }, []);
 
   const handleUploadWithSessionReset = async () => {
     const result = await uploadAll();
