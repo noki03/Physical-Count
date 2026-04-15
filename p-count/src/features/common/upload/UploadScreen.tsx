@@ -24,7 +24,7 @@ const UploadScreen: React.FC = () => {
   } = useUploader();
 
   // Fetch bays data for summary
-  const { data: bays } = useQuery({
+  const { data: bays, isLoading } = useQuery({
     queryKey: ["bays-with-items"],
     queryFn: () => CommonRepository.getBaysWithItems(),
   });
@@ -85,7 +85,15 @@ const UploadScreen: React.FC = () => {
 
       {/* Form Area */}
       <div className="flex-1 overflow-y-auto flex flex-col p-4">
-        {isEmpty ? (
+        {isLoading ? (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="animate-pulse flex flex-col items-center gap-4">
+              <div className="h-20 w-20 bg-muted rounded-full"></div>
+              <div className="h-6 w-32 bg-muted rounded-md mt-4"></div>
+              <div className="h-4 w-48 bg-muted rounded-md mt-2"></div>
+            </div>
+          </div>
+        ) : isEmpty ? (
           <UploadEmptyState />
         ) : isAllSynced ? (
           <UploadSuccessState />
