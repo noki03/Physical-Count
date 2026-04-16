@@ -59,6 +59,12 @@
 - [ ] **Fix BayItemListScreen Constraints:** Add width constraints to `BayItemListScreen` so it no longer stretches full width, bringing it in line with other screens.
 - [ ] **Align Navigation Bars on Wide Screens:** Update `BottomActionBar` and `BottomNav` so their internal content wrappers match the responsive max-width of the screens, preventing them from stretching awkwardly on desktop monitors.
 
+## Enterprise Post-Upload Resilience
+
+- [ ] **Post-Upload Summary Modal:** Instead of just a generic "Synced" state, show users exactly what succeeded (e.g., "Successfully synced 5 Bays and 142 Items").
+- [ ] **Network Interruption Handling:** Implement a retry queue or save-state if internet drops midway through a large sync payload.
+- [ ] **Partial Failure States:** If some items upload but others fail, show a detailed error log of exactly which items failed so the user can retry them.
+
 ## Future Phases
 
 - [ ] Theme toggle UI implementation
