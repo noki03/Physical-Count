@@ -41,9 +41,9 @@ const UploadScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-background animate-in fade-in pb-24">
+    <div className="w-full max-w-md mx-auto mt-8 px-4 pb-24">
       {/* Premium Header Area */}
-      <div className="px-4 pt-8 pb-6 border-b border-border/50">
+      <div className="pb-6 mb-6 border-b border-border/50">
         <h2 className="text-2xl font-bold tracking-tight text-foreground">
           Upload Data
         </h2>
@@ -52,16 +52,8 @@ const UploadScreen: React.FC = () => {
         </p>
       </div>
 
-      {/* Upload Summary */}
-      <div className="px-4 pb-4">
-        <UploadSummary
-          baysCount={unsyncedBaysCount}
-          itemsCount={unsyncedItemsCount}
-        />
-      </div>
-
       {/* Form Area */}
-      <div className="flex-1 overflow-y-auto flex flex-col p-4">
+      <div className="flex flex-col mt-4">
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="animate-pulse flex flex-col items-center gap-4">
@@ -75,31 +67,38 @@ const UploadScreen: React.FC = () => {
         ) : isAllSynced ? (
           <UploadSuccessState />
         ) : (
-          <div className="flex flex-col gap-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                Uploader Name
-              </label>
-              <Input
-                placeholder="Enter your name or ID"
-                className="h-12 rounded-xl text-base"
-                value={uploaderName}
-                onChange={(e) => setUploaderName(e.target.value)}
-                disabled={isUploading}
-              />
-            </div>
+          <div className="flex flex-col animate-in fade-in duration-300">
+            <UploadSummary
+              baysCount={unsyncedBaysCount}
+              itemsCount={unsyncedItemsCount}
+            />
 
-            <div className="flex items-center gap-3 p-4 rounded-xl border border-border/50 bg-muted/20">
-              <input
-                type="checkbox"
-                className="size-5 rounded border-input"
-                checked={shouldReset}
-                onChange={(e) => setShouldReset(e.target.checked)}
-                disabled={isUploading}
-              />
-              <span className="text-sm font-medium">
-                Reset local data after upload
-              </span>
+            <div className="flex flex-col gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">
+                  Uploader Name
+                </label>
+                <Input
+                  placeholder="Enter your name or ID"
+                  className="h-12 rounded-xl text-base"
+                  value={uploaderName}
+                  onChange={(e) => setUploaderName(e.target.value)}
+                  disabled={isUploading}
+                />
+              </div>
+
+              <div className="flex items-center gap-3 p-4 rounded-xl border border-border/50 bg-muted/20">
+                <input
+                  type="checkbox"
+                  className="size-5 rounded border-input"
+                  checked={shouldReset}
+                  onChange={(e) => setShouldReset(e.target.checked)}
+                  disabled={isUploading}
+                />
+                <span className="text-sm font-medium">
+                  Reset local data after upload
+                </span>
+              </div>
             </div>
           </div>
         )}

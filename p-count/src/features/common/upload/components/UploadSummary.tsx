@@ -1,4 +1,3 @@
-import React from "react";
 import { Package, Tags } from "lucide-react";
 
 interface UploadSummaryProps {
@@ -6,33 +5,43 @@ interface UploadSummaryProps {
   itemsCount: number;
 }
 
-export const UploadSummary: React.FC<UploadSummaryProps> = ({
-  baysCount,
-  itemsCount,
-}) => {
+export function UploadSummary({ baysCount, itemsCount }: UploadSummaryProps) {
   return (
-    <div className="bg-muted/30 rounded-xl p-4 border border-border/50">
-      <h4 className="text-sm font-medium text-foreground mb-3">Ready to Sync</h4>
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2">
-          <div className="p-2 bg-primary/10 rounded-lg">
-            <Package className="size-4 text-primary" />
+    <div className="mb-6 space-y-3">
+      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        Ready to Sync
+      </h3>
+      <div className="grid grid-cols-2 gap-4">
+        {/* Bays Metric Card */}
+        <div className="bg-muted/20 border border-border/50 rounded-xl p-4 flex flex-col items-center justify-center gap-2">
+          <div className="p-2 bg-primary/10 rounded-full">
+            <Package className="size-5 text-primary" />
           </div>
-          <div>
-            <p className="text-xl font-bold leading-none">{baysCount}</p>
-            <p className="text-xs text-muted-foreground mt-1">Bays</p>
+          <div className="text-center">
+            <span className="block text-3xl font-bold tracking-tight text-foreground">
+              {baysCount}
+            </span>
+            <span className="text-xs font-medium text-muted-foreground">
+              Pending Bays
+            </span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="p-2 bg-blue-500/10 rounded-lg">
-            <Tags className="size-4 text-blue-500" />
+
+        {/* Items Metric Card */}
+        <div className="bg-muted/20 border border-border/50 rounded-xl p-4 flex flex-col items-center justify-center gap-2">
+          <div className="p-2 bg-foreground/5 rounded-full">
+            <Tags className="size-5 text-foreground" />
           </div>
-          <div>
-            <p className="text-xl font-bold leading-none">{itemsCount}</p>
-            <p className="text-xs text-muted-foreground mt-1">Items</p>
+          <div className="text-center">
+            <span className="block text-3xl font-bold tracking-tight text-foreground">
+              {itemsCount}
+            </span>
+            <span className="text-xs font-medium text-muted-foreground">
+              Pending Items
+            </span>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
