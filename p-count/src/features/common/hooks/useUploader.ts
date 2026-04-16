@@ -1,31 +1,28 @@
 // src/features/bay/hooks/useUploader.ts
 import { useState } from "react";
+import { toast } from "sonner";
 import { defaultUploader } from "@/lib/db/services/uploadService";
 
 export const useUploader = () => {
   const [isUploading, setIsUploading] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
   const [uploaderName, setUploaderName] = useState<string>("");
   const [shouldReset, setShouldReset] = useState<boolean>(false);
 
   const uploadAll = async () => {
     if (!uploaderName.trim()) {
-      setStatus("Please enter uploader name before uploading.");
+      toast.error("Please enter uploader name before uploading.");
       return;
     }
 
     setIsUploading(true);
-    setStatus("Uploading data...");
 
     const result = await defaultUploader(uploaderName, shouldReset);
 
-    setStatus(
-      result.success
-        ? shouldReset
-          ? "Upload successful and local data cleared!"
-          : "Upload successful!"
-        : "Upload failed. Please try again.",
-    );
+    if (result.success) {
+      toast.success("Data uploaded successfully!");
+    } else {
+      toast.error("Upload failed. Please try again.");
+    }
 
     setIsUploading(false);
     return result;
@@ -35,7 +32,6 @@ export const useUploader = () => {
     uploaderName,
     setUploaderName,
     isUploading,
-    status,
     uploadAll,
     shouldReset,
     setShouldReset,
