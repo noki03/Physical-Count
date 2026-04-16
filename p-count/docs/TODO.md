@@ -43,15 +43,15 @@
 
 ## Final Phase 4 Milestone
 
-- [ ] Modernize Upload Screen with mobile-first design
-- [ ] Implement upload progress indicators and sync status
-- [ ] Add bulk operations for better mobile workflow
-- [ ] Complete data layer separation for all toast notifications
+- [x] Modernize Upload Screen with mobile-first design
+- [x] Implement upload progress indicators and sync status
+- [x] Add bulk operations for better mobile workflow
+- [x] Complete data layer separation for all toast notifications
 
 ## Bugs to Fix
 
-- [ ] **Upload Screen - Empty Data State:** Handle the edge case where the database is completely empty (0 Bays). It currently shows the "Success/All Synced" state, which is misleading. It should show a "No data to sync" zero-state.
-- [ ] **Upload Screen - Hydration Flicker:** Fix the UI flicker when navigating to the Upload Screen. React Query loading/caching causes the form to briefly flash before transitioning to the "Synced" success state.
+- [x] **Upload Screen - Empty Data State:** Handle the edge case where the database is completely empty (0 Bays). It currently shows the "Success/All Synced" state, which is misleading. It should show a "No data to sync" zero-state.
+- [x] **Upload Screen - Hydration Flicker:** Fix the UI flicker when navigating to the Upload Screen. React Query loading/caching causes the form to briefly flash before transitioning to the "Synced" success state.
 
 ## Phase 5: Tablet & Desktop Responsiveness
 
