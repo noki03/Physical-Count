@@ -53,6 +53,12 @@
 - [ ] **Upload Screen - Empty Data State:** Handle the edge case where the database is completely empty (0 Bays). It currently shows the "Success/All Synced" state, which is misleading. It should show a "No data to sync" zero-state.
 - [ ] **Upload Screen - Hydration Flicker:** Fix the UI flicker when navigating to the Upload Screen. React Query loading/caching causes the form to briefly flash before transitioning to the "Synced" success state.
 
+## Phase 5: Tablet & Desktop Responsiveness
+
+- [ ] **Standardize Responsive Screen Wrappers:** Update all main screens (`ItemScreen`, `BayScreen`, `UploadScreen`) to use responsive width prefixes (e.g., `max-w-md md:max-w-2xl lg:max-w-4xl`) instead of being locked to mobile width.
+- [ ] **Fix BayItemListScreen Constraints:** Add width constraints to `BayItemListScreen` so it no longer stretches full width, bringing it in line with other screens.
+- [ ] **Align Navigation Bars on Wide Screens:** Update `BottomActionBar` and `BottomNav` so their internal content wrappers match the responsive max-width of the screens, preventing them from stretching awkwardly on desktop monitors.
+
 ## Future Phases
 
 - [ ] Theme toggle UI implementation
