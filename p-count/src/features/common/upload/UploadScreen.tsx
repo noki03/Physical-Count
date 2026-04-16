@@ -32,11 +32,21 @@ const UploadScreen: React.FC = () => {
 
   // Confirmation dialog state
   const [showConfirm, setShowConfirm] = React.useState(false);
+  const [pendingSnapshot, setPendingSnapshot] = React.useState({
+    bays: 0,
+    items: 0,
+  });
 
   const handleUploadWithSessionReset = async () => {
-    const result = await uploadAll();
-    if (result?.success) {
-      resetSession();
+    try {
+      setShowConfirm(false);
+      const result = await uploadAll();
+      if (result?.success && shouldReset) {
+        resetSession();
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+      // Note: Toast notifications are already handled by useUploader
     }
   };
 
@@ -108,9 +118,8 @@ const UploadScreen: React.FC = () => {
       <ConfirmationDialog
         trigger={<div className="hidden" />}
         title="Confirm Upload?"
-        description={`You are about to upload ${unsyncedBaysCount} bays containing ${unsyncedItemsCount} items to the cloud. ${shouldReset ? "Your local session will be cleared afterwards." : ""}`}
+        description={`You are about to upload ${pendingSnapshot.bays} bays containing ${pendingSnapshot.items} items to the cloud. ${shouldReset ? "Your local session will be cleared afterwards." : ""}`}
         onConfirm={() => {
-          setShowConfirm(false);
           handleUploadWithSessionReset();
         }}
         confirmText="Upload Now"
@@ -122,7 +131,13 @@ const UploadScreen: React.FC = () => {
       <BottomActionBar>
         <Button
           className="w-full h-12 rounded-xl text-base font-semibold"
-          onClick={() => setShowConfirm(true)}
+          onClick={() => {
+            setPendingSnapshot({
+              bays: unsyncedBaysCount,
+              items: unsyncedItemsCount,
+            });
+            setShowConfirm(true);
+          }}
           disabled={isUploading || isAllSynced || isEmpty}
           variant="outline"
         >
