@@ -33,7 +33,7 @@ const BayScreen: React.FC<BayScreenProps> = ({ onBayCollected }) => {
   const isLoading = addBayStatus === "pending";
 
   return (
-    <div className="w-full max-w-md mx-auto mt-8 px-4 pb-24 pt-8">
+    <div className="w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mt-8 px-4 pb-24 pt-8">
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold">P-Count System</h1>
         <p className="text-sm text-muted-foreground mt-2">
