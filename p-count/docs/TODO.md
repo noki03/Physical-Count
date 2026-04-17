@@ -32,7 +32,7 @@ The `docs/TODO.md` file has messy heading hierarchies and misplaced sections. We
 - [x] Implement local sync state (isUploaded) and session reset routing
 - [x] Add tap-to-toggle exact metrics for mobile and visual 'Synced' badges
 
-## Phase 4: UI Polish & Architecture
+## Phase 4: UI Polish & Architecture (✅ COMPLETE)
 
 ### Completed
 
@@ -46,13 +46,13 @@ The `docs/TODO.md` file has messy heading hierarchies and misplaced sections. We
 - [x] Add bulk operations summary for better mobile workflow
 - [x] Fix Upload Screen edge cases (Empty Data State, Hydration Flicker)
 
-### Current Target: Data Layer Toast Refactoring
+### Data Layer Toast Refactoring
 
-- [ ] Move `ItemScreen` add/delete toasts from UI to `useItemData.ts` mutation `onSuccess/onError`
-- [ ] Move `BayItemDialog` delete toasts from UI to `useItemData.ts` mutation `onSuccess/onError`
-- [ ] Move `BayItemListScreen` delete toast from UI to `useBayItemList.ts` mutation `onSuccess`
-- [ ] Change delete success toasts to Neutral default style (e.g., `toast("Item removed")`) instead of Green `toast.success`
-- [ ] Clean up UI components to only handle state and user interactions
+- [x] Move `ItemScreen` add/delete toasts from UI to `useItemData.ts` mutation `onSuccess/onError`
+- [x] Move `BayItemDialog` delete toasts from UI to `useItemData.ts` mutation `onSuccess/onError`
+- [x] Move `BayItemListScreen` delete toast from UI to `useBayItemList.ts` mutation `onSuccess`
+- [x] Change delete success toasts to Neutral default style (e.g., `toast("Item removed")`) instead of Green `toast.success`
+- [x] Clean up UI components to only handle state and user interactions
 
 ## Phase 5: Tablet & Desktop Responsiveness
 
