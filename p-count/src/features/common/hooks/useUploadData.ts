@@ -16,9 +16,10 @@ export const useUploadData = () => {
   );
 
   // Derive synced state synchronously to prevent hydration flicker
-  const isAllSynced = Boolean(
-    bays && bays.length > 0 && unsyncedBaysCount === 0,
-  );
+  // Default to false if bays are not loaded yet
+  const isAllSynced = bays
+    ? Boolean(bays.length > 0 && unsyncedBaysCount === 0)
+    : false;
 
   return {
     bays,
