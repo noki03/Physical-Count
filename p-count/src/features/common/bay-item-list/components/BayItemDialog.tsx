@@ -22,7 +22,12 @@ interface BayItemDialogProps {
 export const BayItemDialog: React.FC<BayItemDialogProps> = ({ bay }) => {
   const [open, setOpen] = useState(false);
 
-  const { deleteItem, deleteAllItems, isDeletingAll } = useItemData(bay.id);
+  const { deleteItem, deleteAllItems, isDeletingAll } = useItemData(
+    bay?.id ?? -1,
+  );
+
+  // Early return if bay is undefined to prevent hook crashes
+  if (!bay) return null;
 
   const totalItems = bay.items.length;
   const totalQuantity = bay.items.reduce((sum, item) => sum + item.quantity, 0);
