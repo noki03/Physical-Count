@@ -22,7 +22,7 @@ export const useUploader = () => {
 
     if (result.success) {
       toast.success("Data uploaded successfully!");
-      queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
+      await queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
     } else {
       toast.error("Upload failed. Please try again.");
     }

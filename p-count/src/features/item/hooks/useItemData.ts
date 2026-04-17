@@ -9,10 +9,8 @@ export const useItemData = (bayId?: number) => {
   const { data: items = [], isLoading } = useQuery({
     queryKey: ["items", bayId],
     queryFn: async () => {
-      if (bayId !== undefined) {
-        return await ItemRepository.getItemsByBayId(bayId);
-      }
-      return await ItemRepository.getAllItems();
+      if (bayId === undefined) return [];
+      return await ItemRepository.getItemsByBayId(bayId);
     },
     enabled: bayId !== undefined, // only run if bayId is provided
   });
