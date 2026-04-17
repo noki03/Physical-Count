@@ -51,7 +51,7 @@ const UploadScreen: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto mt-8 px-4 pb-24">
+    <div className="w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mt-8 px-4 pb-24">
       {/* Premium Header Area */}
       <div className="pb-6 mb-6 border-b border-border/50">
         <h2 className="text-2xl font-bold tracking-tight text-foreground">

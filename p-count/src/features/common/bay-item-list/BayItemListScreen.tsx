@@ -56,7 +56,7 @@ export const BayItemListScreen: React.FC = () => {
   }
 
   return (
-    <div className="w-full pb-24 flex flex-col h-full">
+    <div className="w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto pb-24 flex flex-col h-full">
       <BayListContainer
         title="Bays & Items"
         totalBays={totalBays}

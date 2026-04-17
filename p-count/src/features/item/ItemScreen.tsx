@@ -72,7 +72,7 @@ const ItemScreen: React.FC<ItemScreenProps> = ({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto mt-8 px-4 pb-24 ">
+    <div className="w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mt-8 px-4 pb-24 ">
       <div className="mb-6">
         <ItemHeader bayCode={bayCode} />
       </div>
