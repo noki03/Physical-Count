@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface BayFormProps {
@@ -52,10 +51,6 @@ export const BayForm: React.FC<BayFormProps> = ({
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-
-      <Button onClick={onSubmit} className="w-full" disabled={isLoading}>
-        {isLoading ? "Collecting..." : "Collect Bay"}
-      </Button>
     </div>
   );
 };

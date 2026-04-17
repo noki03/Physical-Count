@@ -22,7 +22,12 @@ interface BayItemDialogProps {
 export const BayItemDialog: React.FC<BayItemDialogProps> = ({ bay }) => {
   const [open, setOpen] = useState(false);
 
-  const { deleteItem, deleteAllItems, isDeletingAll } = useItemData(bay.id);
+  const { deleteItem, deleteAllItems, isDeletingAll } = useItemData(
+    bay?.id ?? -1,
+  );
+
+  // Early return if bay is undefined to prevent hook crashes
+  if (!bay) return null;
 
   const totalItems = bay.items.length;
   const totalQuantity = bay.items.reduce((sum, item) => sum + item.quantity, 0);
@@ -33,8 +38,8 @@ export const BayItemDialog: React.FC<BayItemDialogProps> = ({ bay }) => {
 
   const DeleteButtonTrigger = (
     <Button
-      variant="destructive"
-      size="sm"
+      variant="outline"
+      className="w-full h-12 rounded-xl text-destructive border-destructive hover:bg-destructive/10 font-semibold text-base"
       disabled={totalItems === 0 || isDeletingAll}
     >
       {isDeletingAll ? "Deleting..." : "Delete All Items"}
@@ -64,8 +69,8 @@ export const BayItemDialog: React.FC<BayItemDialogProps> = ({ bay }) => {
       >
         {/* Header  */}
         <DialogHeader className="shrink-0 p-4 border-b border-border">
-          <DialogTitle className="text-lg font-semibold">
-            {bay.code}
+          <DialogTitle className="text-xl font-bold uppercase tracking-wider text-center">
+            BAY: {bay.code}
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground">
             List of recorded items in this bay
@@ -76,12 +81,17 @@ export const BayItemDialog: React.FC<BayItemDialogProps> = ({ bay }) => {
         <div className="flex-1 overflow-y-auto p-2">
           <BayItemList
             items={bay.items}
-            onDeleteItem={(id) => deleteItem(id)}
+            onDeleteItem={(id) => {
+              const item = bay.items.find((item) => item.id === id);
+              if (item) {
+                deleteItem({ id, itemCode: item.itemCode });
+              }
+            }}
           />
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 border-t border-border p-3 flex flex-col gap-3 items-center">
+        <div className="shrink-0 border-t border-border/50 p-4 bg-background/80 backdrop-blur-md flex flex-col gap-3 items-center">
           {/* Stats (No Change) */}
           <span className="text-[11px] text-muted-foreground italic text-center">
             {totalItems} {totalItems === 1 ? "item" : "items"} • {totalQuantity}{" "}

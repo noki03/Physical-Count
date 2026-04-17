@@ -1,21 +1,31 @@
-// item/ItemScreen.tsx
+/**
+ * ACTIVE SCANNING LIST
+ * Renders the UI for actively scanning new items into the current Bay.
+ * Includes the input field and the real-time list of scanned items.
+ */
+
 import React, { useState } from "react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { toast } from "sonner";
 
 import { useItemData } from "./hooks/useItemData";
 import { ItemHeader } from "./components/ItemHeader";
 import { ItemForm } from "./components/ItemForm";
 import { ItemList } from "./components/ItemList";
 import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
+import { BottomActionBar } from "@/components/layout/BottomActionBar";
+import { Button } from "@/components/ui/button";
 import type { Item } from "./types";
 
 interface ItemScreenProps {
   bayId: number;
   bayCode: string;
+  onFinishItems?: () => void;
 }
 
-const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
+const ItemScreen: React.FC<ItemScreenProps> = ({
+  bayId,
+  bayCode,
+  onFinishItems,
+}) => {
   const [itemCode, setItemCode] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState("");
@@ -39,7 +49,6 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
         timestamp: Date.now(),
       });
 
-      toast.success(`Item ${itemCode} added to bay ${bayCode}!`);
       setItemCode("");
       setQuantity(1);
     } catch {
@@ -51,39 +60,50 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ bayId, bayCode }) => {
     if (!itemToDelete?.id) return;
 
     try {
-      await deleteItem(itemToDelete.id);
-      toast.success("Item deleted successfully!");
-      setItemToDelete(null);
-    } catch {
-      toast.error("Failed to delete item. Please try again.");
+      await deleteItem({
+        id: itemToDelete.id,
+        itemCode: itemToDelete.itemCode,
+      });
+      setItemToDelete(null); // Keep UI state reset in the UI layer
+    } catch (error) {
+      // Error toast is now handled by the data layer
+      console.error("Deletion failed:", error);
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto mt-8">
-      <Card className="border-border">
-        <CardHeader>
-          <ItemHeader bayCode={bayCode} />
-        </CardHeader>
+    <div className="w-full max-w-md mx-auto mt-8 px-4 pb-24 ">
+      <div className="mb-6">
+        <ItemHeader bayCode={bayCode} />
+      </div>
 
-        <CardContent className="px-3.5 ">
-          <ItemForm
-            itemCode={itemCode}
-            quantity={quantity}
-            error={error}
-            onItemCodeChange={setItemCode}
-            onQuantityChange={setQuantity}
-            onSubmit={handleAddItem}
-            isAdding={isAdding}
-          />
+      <div className="space-y-6 ">
+        <ItemForm
+          itemCode={itemCode}
+          quantity={quantity}
+          error={error}
+          onItemCodeChange={setItemCode}
+          onQuantityChange={setQuantity}
+          onSubmit={handleAddItem}
+          isAdding={isAdding}
+        />
 
-          <ItemList
-            items={items}
-            isLoading={isLoading}
-            onDeleteClick={(item) => setItemToDelete(item)}
-          />
-        </CardContent>
-      </Card>
+        <ItemList
+          items={items}
+          isLoading={isLoading}
+          onDeleteClick={(item) => setItemToDelete(item)}
+        />
+      </div>
+
+      <BottomActionBar>
+        <Button
+          variant="outline"
+          onClick={() => onFinishItems?.()}
+          className="w-full"
+        >
+          Finish and Scan Another Bay
+        </Button>
+      </BottomActionBar>
 
       {/* Delete Confirmation Dialog */}
       <ConfirmationDialog

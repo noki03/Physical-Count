@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { ItemRepository } from "@/lib/db/repositories/itemRepository";
 import type { Item } from "../types";
 
@@ -20,18 +21,27 @@ export const useItemData = (bayId?: number) => {
     mutationFn: async (item: Omit<Item, "id">) => {
       return await ItemRepository.addItem(item);
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["items", bayId] });
+      toast.success(`Item ${variables.itemCode} added!`);
+    },
+    onError: () => {
+      toast.error("Failed to add item. Please try again.");
     },
   });
 
   const deleteItemMutation = useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async ({ id }: { id: number; itemCode: string }) => {
       return await ItemRepository.deleteItem(id);
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["items", bayId] });
       queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
+      // Using the neutral default toast for deletions
+      toast.info(`Item ${variables.itemCode} removed`);
+    },
+    onError: () => {
+      toast.error("Failed to delete item. Please try again.");
     },
   });
 
@@ -43,6 +53,10 @@ export const useItemData = (bayId?: number) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items", bayId] });
       queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
+      toast("All items removed from bay");
+    },
+    onError: () => {
+      toast.error("Failed to clear items. Please try again.");
     },
   });
 

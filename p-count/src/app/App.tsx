@@ -4,11 +4,9 @@ import ItemScreen from "@/features/item/ItemScreen";
 import UploadScreen from "@/features/common/upload/UploadScreen";
 import { BayRepository } from "@/lib/db/repositories/bayRepository";
 import { Toaster } from "@/components/ui/sonner";
-import { Button } from "@/components/ui/button";
 import { BayItemListScreen } from "@/features/common/bay-item-list/BayItemListScreen";
-import { SpeedDial } from "@/components/common/SpeedDial";
 import Header from "@/components/layout/Header";
-import { List, ScanBarcode, UploadCloud } from "lucide-react";
+import { BottomNav } from "@/components/layout/BottomNav";
 import { useAppStore } from "@/store/useAppStore";
 
 const App = () => {
@@ -36,44 +34,17 @@ const App = () => {
         )}
 
         {currentStep === "addItems" && currentBay && (
-          <div className="w-full max-w-md flex flex-col gap-4 mx-auto">
-            <ItemScreen bayId={currentBay.id!} bayCode={currentBay.code} />
-
-            <Button
-              variant="outline"
-              onClick={handleFinishItems}
-              className="w-full"
-            >
-              Finish and Scan Another Bay
-            </Button>
-          </div>
+          <ItemScreen
+            bayId={currentBay.id!}
+            bayCode={currentBay.code}
+            onFinishItems={handleFinishItems}
+          />
         )}
 
         {currentStep === "viewList" && <BayItemListScreen />}
         {currentStep === "upload" && <UploadScreen />}
 
-        {/* Bottom SpeedDial Floating Actions */}
-        <SpeedDial
-          placement="bottom-right"
-          actions={[
-            {
-              icon: <ScanBarcode size={18} />,
-              label: "Scan Bay",
-              onClick: () => setStep("scanBay"),
-            },
-            {
-              icon: <List size={18} />,
-              label: "View Bays & Items",
-              onClick: () => setStep("viewList"),
-            },
-            {
-              icon: <UploadCloud size={18} />,
-              label: "Upload",
-              onClick: () => setStep("upload"),
-            },
-          ]}
-        />
-
+        <BottomNav />
         <Toaster richColors />
       </main>
     </div>

@@ -1,3 +1,8 @@
+/**
+ * DASHBOARD BAYS LIST - DELETE ACTION
+ * Extracted delete button component for BayCard.
+ * Handles confirmation dialog for deleting an entire Bay.
+ */
 // src/features/common/bay-item-list/components/DeleteBayButton.tsx
 import React from "react";
 import { Button } from "@/components/ui/button";
@@ -7,7 +12,7 @@ import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
 interface DeleteBayButtonProps {
   bayId: number;
   bayCode: string;
-  onDeleteBay: (id: number) => void;
+  onDeleteBay: (params: { id: number; code: string }) => void;
 }
 
 export const DeleteBayButton: React.FC<DeleteBayButtonProps> = ({
@@ -27,7 +32,7 @@ export const DeleteBayButton: React.FC<DeleteBayButtonProps> = ({
       trigger={triggerButton}
       title={`Delete Bay ${bayCode}`}
       description={`Are you sure you want to delete bay "${bayCode}"? This action cannot be undone.`}
-      onConfirm={() => onDeleteBay(bayId)}
+      onConfirm={() => onDeleteBay({ id: bayId, code: bayCode })}
       confirmText="Delete Bay"
       confirmVariant="destructive"
     />

@@ -1,5 +1,6 @@
 // src/features/common/bay-item-list/hooks/useBayItemList.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { CommonRepository } from "@/lib/db/repositories/commonRepository";
 import { BayRepository } from "@/lib/db/repositories/bayRepository";
 import type { Bay } from "@/features/bay/types";
@@ -38,11 +39,16 @@ export const useBayItemList = () => {
 
   // 🗑️ Delete Bay Mutation (NEW)
   const deleteBayMutation = useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async ({ id }: { id: number; code: string }) => {
       await BayRepository.deleteBay(id);
     },
-    onSuccess: async () => {
+    onSuccess: async (_, variables) => {
       await queryClient.invalidateQueries({ queryKey: ["bays-with-items"] });
+      // Using the neutral default toast for deletions
+      toast.info(`Bay ${variables.code} deleted`);
+    },
+    onError: () => {
+      toast.error("Failed to delete bay. Please try again.");
     },
   });
 
@@ -62,6 +68,7 @@ export const useBayItemList = () => {
 
     // delete (NEW)
     deletingBay: deleteBayMutation.isPending,
-    handleDeleteBay: (id: number) => deleteBayMutation.mutate(id),
+    handleDeleteBay: ({ id, code }: { id: number; code: string }) =>
+      deleteBayMutation.mutate({ id, code }),
   };
 };

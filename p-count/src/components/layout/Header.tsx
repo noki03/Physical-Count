@@ -1,8 +1,7 @@
-import React from "react";
 import { useTheme } from "next-themes";
 import { Classic } from "@theme-toggles/react";
 
-const Header: React.FC = () => {
+export default function Header() {
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {
@@ -10,8 +9,10 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="w-full py-1 px-4 bg-primary text-primary-foreground shadow flex items-center justify-between">
-      <h1 className="text-xl font-bold">Physical Count </h1>
+    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/50 h-14 flex items-center justify-between px-4">
+      <h1 className="text-lg font-bold tracking-tight text-foreground">
+        Physical Count
+      </h1>
 
       <div className="flex items-center justify-center hover:bg-accent rounded-md h-9 w-9 transition-colors">
         <Classic
@@ -31,6 +32,4 @@ const Header: React.FC = () => {
       </div>
     </header>
   );
-};
-
-export default Header;
+}

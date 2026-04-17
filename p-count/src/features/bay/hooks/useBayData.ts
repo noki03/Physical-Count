@@ -1,5 +1,6 @@
 // src/features/bay/hooks/useBayData.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { BayRepository } from "@/lib/db/repositories/bayRepository";
 import type { Bay } from "../types";
 
@@ -21,8 +22,12 @@ export const useBayData = () => {
       const id = await BayRepository.addBay(newBay);
       return { id, ...newBay };
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["bays"] });
+      toast.success(`Bay ${variables} collected successfully!`);
+    },
+    onError: () => {
+      toast.error("Failed to collect bay. Please try again.");
     },
   });
 

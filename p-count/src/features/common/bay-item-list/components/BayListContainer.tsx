@@ -1,7 +1,11 @@
+/**
+ * DASHBOARD BAYS LIST - CONTAINER
+ * Wraps mapped BayCards and houses the 3-Metric Dashboard (Bays, Items, Units).
+ * Used inside BayItemListScreen.
+ */
 // src/features/common/bay-item-list/components/BayItemCard.tsx -> BayListContainer.tsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 interface BayListContainerProps {
   // Renamed Props
@@ -35,8 +39,8 @@ export const BayListContainer: React.FC<BayListContainerProps> = ({
     opacity: { duration: 0.15 },
   };
   return (
-    <Card className="border-border px-1">
-      <CardHeader>
+    <div>
+      <div className="px-4 pt-4 pb-2">
         <h2 className="text-lg font-semibold text-center">{title}</h2>
 
         {/* 3-Metric Dashboard */}
@@ -44,7 +48,7 @@ export const BayListContainer: React.FC<BayListContainerProps> = ({
           totalRecords !== undefined &&
           totalUnits !== undefined && (
             <div>
-              <div className="flex w-full divide-x divide-border overflow-hidden rounded-md border border-border/50 bg-card">
+              <div className="flex w-full divide-x divide-border/50 overflow-hidden bg-transparent mb-2">
                 {/* Bays Metric */}
                 <motion.div
                   layout
@@ -154,10 +158,10 @@ export const BayListContainer: React.FC<BayListContainerProps> = ({
               </div>
             </div>
           )}
-      </CardHeader>
-      <CardContent className="px-2">
-        <div className="max-h-[50vh] overflow-y-auto">{children}</div>
-      </CardContent>
-    </Card>
+      </div>
+      <div className="max-h-[55vh] overflow-y-auto flex flex-col divide-y divide-border/40 bg-background mt-4">
+        {children}
+      </div>
+    </div>
   );
 };
