@@ -30,13 +30,24 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
+    launchOptions: {
+      slowMo: 400,
+    },
   },
 
   /* Configure projects for major browsers */
   projects: [
+    /* {
+      name: "Desktop Chrome",
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+    }, */
     {
-      name: "Mobile Chrome",
-      use: { ...devices["Pixel 5"] },
+      name: "Pixel 7",
+      use: {
+        ...devices["Pixel 7"],
+      },
     },
   ],
 
