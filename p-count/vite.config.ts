@@ -1,7 +1,7 @@
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig as defineTestConfig } from "vitest/config";
 import os from "os";
 
 function getLocalIP() {
@@ -16,7 +16,7 @@ function getLocalIP() {
   return "localhost";
 }
 
-export default defineConfig({
+export default defineTestConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -37,5 +37,10 @@ export default defineConfig({
       host: getLocalIP(), // dynamically resolved IP
       port: 5174,
     },
+  },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["./tests/setup.ts"],
   },
 });

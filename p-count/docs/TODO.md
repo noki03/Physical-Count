@@ -63,7 +63,7 @@ The `docs/TODO.md` file has messy heading hierarchies and misplaced sections. We
 ## Phase 6: Automated Testing Foundation
 
 - [x] **Setup Playwright for E2E Testing:** Install and configure Playwright to simulate mobile viewports and test core user flows (Scanning, Reviewing, Uploading).
-- [ ] **Setup Vitest & React Testing Library:** Install testing tools for unit testing complex data layer hooks (Zustand stores, Dexie DB interactions).
+- [x] **Setup Vitest & React Testing Library:** Install testing tools for unit testing complex data layer hooks (Zustand stores, Dexie DB interactions).
 - [x] **Write Core User Journey Test:** Create an automated Playwright test that simulates adding a Bay, adding Items, and completing an upload to replace manual regression testing.
 
 ## Phase 7: Enterprise Post-Upload Resilience
