@@ -1,7 +1,10 @@
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig as defineTestConfig } from "vitest/config";
+import {
+  defineConfig as defineTestConfig,
+  configDefaults,
+} from "vitest/config";
 import os from "os";
 
 function getLocalIP() {
@@ -42,5 +45,6 @@ export default defineTestConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./tests/unit-setup.ts"],
+    exclude: [...configDefaults.exclude, "tests/e2e/**"],
   },
 });
