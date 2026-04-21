@@ -2,6 +2,59 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Branching Strategy
+
+```
+main          ← tagged releases only (v1.0, v1.1.0, …)
+  └── dev-stable  ← integration/staging; merges from dev via PR (approval required)
+       └── dev    ← active development; merges from feat/* via PR
+            └── feat/<name>   ← one branch per feature/fix
+                 └── feat/<name>/<sub>  ← sub-branches only when needed
+```
+
+**Flow:** `feat/*` → `dev` → `dev-stable` → `main`
+
+- All merges happen via **Pull Requests** — never use `git merge` locally to land branches into `dev`, `dev-stable`, or `main`
+- Tag a new version on `main` after each `dev-stable → main` merge
+- Branch naming: `feat/short-description`, sub-branches: `feat/short-description/sub-task`
+
+## GitHub PR Workflow
+
+**Repo:** `noki03/Physical-Count`  
+**Auth:** Requires `GITHUB_PAT` environment variable (classic PAT, `repo` scope) — or `gh` CLI if installed.
+
+### Standard flow — one feature branch
+
+```bash
+# 1. Push branch to origin
+git push origin <branch-name>
+
+# 2. Create PR via GitHub API
+curl -s --request POST \
+  --header "Authorization: Bearer $GITHUB_PAT" \
+  --header "Content-Type: application/json" \
+  --data "{\"title\":\"<title>\",\"body\":\"<body>\",\"head\":\"<branch>\",\"base\":\"dev\"}" \
+  "https://api.github.com/repos/noki03/Physical-Count/pulls"
+# → returns JSON with "number" (the PR number, e.g. 28)
+
+# 3. Present PR URL to user and wait for "approve"
+# https://github.com/noki03/Physical-Count/pull/<number>
+
+# 4. On approval — merge via API (or user merges on GitHub UI)
+curl -s --request PUT \
+  --header "Authorization: Bearer $GITHUB_PAT" \
+  --header "Content-Type: application/json" \
+  --data "{\"merge_method\":\"merge\"}" \
+  "https://api.github.com/repos/noki03/Physical-Count/pulls/<number>/merge"
+
+# 5. Sync local target branch and delete local feature branch
+git checkout dev && git pull origin dev && git branch -d <branch-name>
+```
+
+### Never merge locally
+
+Do NOT use `git merge` to land branches into `dev`, `dev-stable`, or `main`. Always push and create a PR so there is a proper audit trail. The only exception is fast-forward syncs explicitly requested by the user.
+
 ## Commands
 
 ```bash
