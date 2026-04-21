@@ -1,12 +1,3 @@
-[ACTION: CLEAN UP AND REORGANIZE TODO.MD]
-
-Architect Instructions:
-The `docs/TODO.md` file has messy heading hierarchies and misplaced sections. We need to completely rewrite it into a clean, logical structure.
-
-1. Open `docs/TODO.md`.
-2. Replace the entire content with this strictly formatted version:
-
-```markdown
 # Physical Count - Development Roadmap
 
 ## Phase 1: UI/UX & Shell Foundation
@@ -32,9 +23,7 @@ The `docs/TODO.md` file has messy heading hierarchies and misplaced sections. We
 - [x] Implement local sync state (isUploaded) and session reset routing
 - [x] Add tap-to-toggle exact metrics for mobile and visual 'Synced' badges
 
-## Phase 4: UI Polish & Architecture (✅ COMPLETE)
-
-### Completed
+## Phase 4: UI Polish & Architecture
 
 - [x] Mobile-first edge-to-edge layouts with soft dividers
 - [x] BottomActionBar implementation for consistent mobile UX
@@ -45,35 +34,43 @@ The `docs/TODO.md` file has messy heading hierarchies and misplaced sections. We
 - [x] Modernize Upload Screen with progress indicators and sync status
 - [x] Add bulk operations summary for better mobile workflow
 - [x] Fix Upload Screen edge cases (Empty Data State, Hydration Flicker)
+- [x] Move toasts to data layer (useItemData, useBayItemList mutations)
 
-### Data Layer Toast Refactoring
+## Phase 5: Tablet & Desktop Responsiveness
 
-- [x] Move `ItemScreen` add/delete toasts from UI to `useItemData.ts` mutation `onSuccess/onError`
-- [x] Move `BayItemDialog` delete toasts from UI to `useItemData.ts` mutation `onSuccess/onError`
-- [x] Move `BayItemListScreen` delete toast from UI to `useBayItemList.ts` mutation `onSuccess`
-- [x] Change delete success toasts to Neutral default style (e.g., `toast("Item removed")`) instead of Green `toast.success`
-- [x] Clean up UI components to only handle state and user interactions
-
-## Phase 5: Tablet & Desktop Responsiveness (COMPLETED)
-
-- [x] **Standardize Responsive Screen Wrappers:** Update all main screens (`ItemScreen`, `BayScreen`, `UploadScreen`) to use responsive width prefixes (e.g., `max-w-md md:max-w-2xl lg:max-w-4xl`) instead of being locked to mobile width.
-- [x] **Fix BayItemListScreen Constraints:** Add width constraints to `BayItemListScreen` so it no longer stretches full width, bringing it in line with other screens.
-- [x] **Align Navigation Bars on Wide Screens:** Update `BottomActionBar` and `BottomNav` so their internal content wrappers match the responsive max-width of the screens, preventing them from stretching awkwardly on desktop monitors.
+- [x] Standardize responsive screen wrappers (max-w-md md:max-w-2xl lg:max-w-4xl)
+- [x] Fix BayItemListScreen width constraints
+- [x] Align BottomActionBar and BottomNav on wide screens
 
 ## Phase 6: Automated Testing Foundation
 
-- [x] **Setup Playwright for E2E Testing:** Install and configure Playwright to simulate mobile viewports and test core user flows (Scanning, Reviewing, Uploading).
-- [x] **Setup Vitest & React Testing Library:** Install testing tools for unit testing complex data layer hooks (Zustand stores, Dexie DB interactions).
-- [x] **Write Core User Journey Test:** Create an automated Playwright test that simulates adding a Bay, adding Items, and completing an upload to replace manual regression testing.
+- [x] Setup Playwright for E2E testing (Pixel 7 viewport)
+- [x] Setup Vitest & React Testing Library for unit tests
+- [x] Write core user journey E2E test
+- [x] Write delete journey E2E tests
+- [x] Write advanced delete journey E2E tests
+- [x] Unit tests for useItemData (load, add, delete, loading state, deleteAll, bay isolation)
+- [x] Unit tests for useBayData (load, add, loading state, empty state)
+
+## Phase 6.5: Bug Fixes & Production Hardening
+
+- [x] Fix orphaned items on bay delete
+- [x] Fix upload payload join (bayId instead of bayCode)
+- [x] Wire EditBayModal into BayCard (bay rename flow)
+- [x] Add post-upload success dialog (synced bay/item counts)
+- [x] Replace hardcoded DEVICE-001 with persistent localStorage UUID
+- [x] Replace simulated upload with conditional real fetch (VITE_UPLOAD_URL)
+- [x] Remove debug console.logs and window.__TANSTACK_QUERY_CLIENT__
+- [x] Delete unused SpeedDial and BayItemAccordion dead code
+- [x] Add .env.example and CLAUDE.md project documentation
 
 ## Phase 7: Enterprise Post-Upload Resilience
 
-- [ ] **Post-Upload Summary Modal:** Instead of just a generic "Synced" state, show users exactly what succeeded (e.g., "Successfully synced 5 Bays and 142 Items").
-- [ ] **Network Interruption Handling:** Implement a retry queue or save-state if internet drops midway through a large sync payload.
-- [ ] **Partial Failure States:** If some items upload but others fail, show a detailed error log of exactly which items failed so the user can retry them.
+- [ ] Network interruption handling — retry queue or save-state on failed sync
+- [ ] Partial failure states — detailed error log of which items failed
+- [ ] Advanced error recovery and retry UI
 
 ## Future Phases
 
 - [ ] Theme toggle UI implementation
 - [ ] Real API integration (replace mocks)
-```
