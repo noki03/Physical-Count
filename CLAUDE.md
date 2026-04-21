@@ -21,7 +21,7 @@ main          ← tagged releases only (v1.0, v1.1.0, …)
 ## GitHub PR Workflow
 
 **Repo:** `noki03/Physical-Count`  
-**Auth:** Requires `GITHUB_PAT` environment variable (classic PAT, `repo` scope) — or `gh` CLI if installed.
+**Auth:** Requires `GITHUB_PAT` environment variable (fine-grained PAT, `Contents` + `Pull requests` read/write, scoped to this repo only).
 
 ### Standard flow — one feature branch
 
@@ -40,14 +40,9 @@ curl -s --request POST \
 # 3. Present PR URL to user and wait for "approve"
 # https://github.com/noki03/Physical-Count/pull/<number>
 
-# 4. On approval — merge via API (or user merges on GitHub UI)
-curl -s --request PUT \
-  --header "Authorization: Bearer $GITHUB_PAT" \
-  --header "Content-Type: application/json" \
-  --data "{\"merge_method\":\"merge\"}" \
-  "https://api.github.com/repos/noki03/Physical-Count/pulls/<number>/merge"
+# 4. User approves and merges on GitHub UI — Claude never merges
 
-# 5. Sync local target branch and delete local feature branch
+# 5. After user confirms merge — sync local target branch and delete local feature branch
 git checkout dev && git pull origin dev && git branch -d <branch-name>
 ```
 
