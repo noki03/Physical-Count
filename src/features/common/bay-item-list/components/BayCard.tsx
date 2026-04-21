@@ -9,13 +9,15 @@ import type { Bay } from "@/features/bay/types";
 import type { Item } from "@/features/item/types";
 import { BayItemDialog } from "./BayItemDialog";
 import { DeleteBayButton } from "./DeleteBayButton";
+import { EditBayModal } from "./EditBayModal";
 
 interface BayCardProps {
   bay: Bay & { items: Item[] };
   onDeleteBay: (params: { id: number; code: string }) => void;
+  onUpdateBay: (id: number, newCode: string) => void;
 }
 
-export const BayCard: React.FC<BayCardProps> = ({ bay, onDeleteBay }) => {
+export const BayCard: React.FC<BayCardProps> = ({ bay, onDeleteBay, onUpdateBay }) => {
   return (
     <div className="flex items-center justify-between p-4 bg-background hover:bg-muted/50 transition-colors ">
       <div className="flex flex-col">
@@ -34,6 +36,7 @@ export const BayCard: React.FC<BayCardProps> = ({ bay, onDeleteBay }) => {
 
       <div className="flex gap-2 items-center">
         <BayItemDialog bay={bay} />
+        <EditBayModal bay={bay} onSave={onUpdateBay} />
         <DeleteBayButton
           bayId={bay.id!}
           bayCode={bay.code}

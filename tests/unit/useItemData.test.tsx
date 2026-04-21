@@ -98,4 +98,63 @@ describe("useItemData Hook Logic", () => {
     expect(result.current.isLoading).toBe(true);
     await waitFor(() => expect(result.current.isLoading).toBe(false));
   });
+
+  test("should delete all items for a bay", async () => {
+    await db.items.add({
+      itemCode: "ITEM-A",
+      bayId: testBayId,
+      bayCode: "TEST-BAY",
+      quantity: 1,
+      timestamp: Date.now(),
+    });
+    await db.items.add({
+      itemCode: "ITEM-B",
+      bayId: testBayId,
+      bayCode: "TEST-BAY",
+      quantity: 2,
+      timestamp: Date.now(),
+    });
+
+    const { result } = renderHook(() => useItemData(testBayId), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => expect(result.current.items).toHaveLength(2));
+
+    await act(async () => {
+      await result.current.deleteAllItems();
+    });
+
+    await waitFor(() => expect(result.current.items).toHaveLength(0));
+  });
+
+  test("should only load items belonging to the given bay", async () => {
+    const otherBayId = (await db.bays.add({
+      code: "OTHER-BAY",
+      finalized: false,
+      timestamp: Date.now(),
+    })) as number;
+
+    await db.items.add({
+      itemCode: "MINE",
+      bayId: testBayId,
+      bayCode: "TEST-BAY",
+      quantity: 1,
+      timestamp: Date.now(),
+    });
+    await db.items.add({
+      itemCode: "NOT-MINE",
+      bayId: otherBayId,
+      bayCode: "OTHER-BAY",
+      quantity: 1,
+      timestamp: Date.now(),
+    });
+
+    const { result } = renderHook(() => useItemData(testBayId), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => expect(result.current.items).toHaveLength(1));
+    expect(result.current.items[0].itemCode).toBe("MINE");
+  });
 });
