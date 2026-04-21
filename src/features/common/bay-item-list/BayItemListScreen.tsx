@@ -13,8 +13,14 @@ import { BayListContainer } from "./components/BayListContainer";
 import { BottomActionBar } from "@/components/layout/BottomActionBar";
 
 export const BayItemListScreen: React.FC = () => {
-  const { bays, loading, resetting, handleReset, handleDeleteBay } =
-    useBayItemList();
+  const {
+    bays,
+    loading,
+    resetting,
+    handleReset,
+    handleDeleteBay,
+    handleUpdateBay,
+  } = useBayItemList();
 
   // Calculate aggregates for summary display
   const totalBays = bays.length;
@@ -47,7 +53,7 @@ export const BayItemListScreen: React.FC = () => {
         <h3 className="text-xl font-semibold text-foreground tracking-tight mb-2">
           No bays collected
         </h3>
-        <p className="text-sm text-muted-foreground max-w-[250px]">
+        <p className="text-sm text-muted-foreground max-w-62.5">
           Your scanned bays and inventory items will appear here. Head over to
           the Scan tab to get started.
         </p>
@@ -73,6 +79,7 @@ export const BayItemListScreen: React.FC = () => {
                   handleDeleteBay({ id: bay.id, code: bay.code });
                 }
               }}
+              onUpdateBay={handleUpdateBay}
             />
           ))}
         </div>

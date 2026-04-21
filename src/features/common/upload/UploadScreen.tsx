@@ -1,9 +1,18 @@
 // src/features/bay/UploadScreen.tsx
 import React from "react";
+import { CheckCircle2 } from "lucide-react";
 import { useUploader } from "../hooks/useUploader";
 import { useUploadData } from "../hooks/useUploadData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { useAppStore } from "@/store/useAppStore";
 import { BottomActionBar } from "@/components/layout/BottomActionBar";
 import { ConfirmationDialog } from "@/components/common/ConfirmationDialog";
@@ -30,29 +39,39 @@ const UploadScreen: React.FC = () => {
     isAllSynced,
   } = useUploadData();
 
-  // Confirmation dialog state
   const [showConfirm, setShowConfirm] = React.useState(false);
   const [pendingSnapshot, setPendingSnapshot] = React.useState({
     bays: 0,
     items: 0,
   });
+  const [showSuccessModal, setShowSuccessModal] = React.useState(false);
+  const [syncedSnapshot, setSyncedSnapshot] = React.useState({
+    bays: 0,
+    items: 0,
+  });
+  // Track whether session should reset when the success modal is dismissed
+  const shouldResetOnClose = React.useRef(false);
 
-  const handleUploadWithSessionReset = async () => {
-    try {
-      setShowConfirm(false);
-      const result = await uploadAll();
-      if (result?.success && shouldReset) {
-        resetSession();
-      }
-    } catch (error) {
-      console.error("Upload failed:", error);
-      // Note: Toast notifications are already handled by useUploader
+  const handleUpload = async () => {
+    setShowConfirm(false);
+    const result = await uploadAll();
+    if (result?.success) {
+      setSyncedSnapshot(pendingSnapshot);
+      shouldResetOnClose.current = shouldReset;
+      setShowSuccessModal(true);
+    }
+  };
+
+  const handleSuccessModalClose = () => {
+    setShowSuccessModal(false);
+    if (shouldResetOnClose.current) {
+      resetSession();
     }
   };
 
   return (
     <div className="w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mt-8 px-4 pb-24">
-      {/* Premium Header Area */}
+      {/* Header */}
       <div className="pb-6 mb-6 border-b border-border/50">
         <h2 className="text-2xl font-bold tracking-tight text-foreground">
           Upload Data
@@ -118,14 +137,40 @@ const UploadScreen: React.FC = () => {
       <ConfirmationDialog
         trigger={<div className="hidden" />}
         title="Confirm Upload?"
-        description={`You are about to upload ${pendingSnapshot.bays} bays containing ${pendingSnapshot.items} items to the cloud. ${shouldReset ? "Your local session will be cleared afterwards." : ""}`}
-        onConfirm={() => {
-          handleUploadWithSessionReset();
-        }}
+        description={`You are about to upload ${pendingSnapshot.bays} bays containing ${pendingSnapshot.items} items to the cloud.${shouldReset ? " Your local session will be cleared afterwards." : ""}`}
+        onConfirm={handleUpload}
         confirmText="Upload Now"
         open={showConfirm}
         onOpenChange={setShowConfirm}
       />
+
+      {/* Post-upload Summary Modal */}
+      <Dialog open={showSuccessModal} onOpenChange={handleSuccessModalClose}>
+        <DialogContent showCloseButton={false} className="text-center">
+          <DialogHeader className="items-center">
+            <div className="mb-2 flex items-center justify-center rounded-full bg-green-500/15 p-4">
+              <CheckCircle2 className="size-8 text-green-500" />
+            </div>
+            <DialogTitle className="text-xl">Upload Successful</DialogTitle>
+            <DialogDescription className="text-base">
+              Successfully synced{" "}
+              <span className="font-semibold text-foreground">
+                {syncedSnapshot.bays} {syncedSnapshot.bays === 1 ? "bay" : "bays"}
+              </span>{" "}
+              and{" "}
+              <span className="font-semibold text-foreground">
+                {syncedSnapshot.items} {syncedSnapshot.items === 1 ? "item" : "items"}
+              </span>{" "}
+              to the cloud.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button className="w-full" onClick={handleSuccessModalClose}>
+              Done
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Sticky Bottom Action Bar */}
       <BottomActionBar>
