@@ -13,6 +13,7 @@ export const BayRepository = {
     return await db.bays.update(id, updates);
   },
   deleteBay: async (id: number) => {
+    await db.items.where("bayId").equals(id).delete();
     return await db.bays.delete(id);
   },
 
@@ -21,12 +22,7 @@ export const BayRepository = {
    */
   finalizeBay: async (bayId: number) => {
     const bay = await db.bays.get(bayId);
-    if (!bay) {
-      console.warn(`⚠️ No bay found with id ${bayId} to finalize.`);
-      return;
-    }
-
+    if (!bay) return;
     await db.bays.update(bay.id!, { finalized: true });
-    console.log(`✅ Bay ${bay.code} (id: ${bay.id}) marked as finalized.`);
   },
 };

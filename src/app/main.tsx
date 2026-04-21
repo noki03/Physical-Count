@@ -6,18 +6,7 @@ import App from "./App";
 import "../styles/globals.css";
 import "@theme-toggles/react/css/Classic.css";
 
-// ✅ Extend Window type to avoid TS2339
-declare global {
-  interface Window {
-    __TANSTACK_QUERY_CLIENT__?: QueryClient;
-  }
-}
-
-// ✅ Create QueryClient once
 const queryClient = new QueryClient();
-
-// ✅ Optional: expose for debugging
-window.__TANSTACK_QUERY_CLIENT__ = queryClient;
 
 createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>

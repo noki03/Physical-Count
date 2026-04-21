@@ -1,6 +1,7 @@
 // src/lib/db/services/uploadService.ts
 import { db } from "../core/database";
 import { CommonRepository } from "../repositories/commonRepository";
+import { getDeviceId } from "@/lib/deviceId";
 
 export const defaultUploader = async (
   uploaderName: string,
@@ -13,7 +14,7 @@ export const defaultUploader = async (
     bayCode: bay.code,
     timestamp: bay.timestamp || null,
     items: items
-      .filter((item) => item.bayCode === bay.code)
+      .filter((item) => item.bayId === bay.id)
       .map((item) => ({
         id: item.id,
         itemCode: item.itemCode,
@@ -25,31 +26,37 @@ export const defaultUploader = async (
   const payload = {
     uploader: {
       name: uploaderName,
-      deviceId: "DEVICE-001",
+      deviceId: getDeviceId(),
     },
     timestamp: new Date().toISOString(),
     data: structuredData,
   };
 
-  console.log("📤 Upload payload:", payload);
-
   try {
-    console.log("🧪 Simulating upload...");
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const uploadUrl = import.meta.env.VITE_UPLOAD_URL;
 
-    console.log("✅ Simulated upload completed successfully");
+    if (uploadUrl) {
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    } else {
+      // No API configured — simulate for local development
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+    }
 
     if (shouldReset) {
       await CommonRepository.resetDatabase();
     } else {
-      // Mark all bays and items as uploaded without clearing data
       await db.bays.toCollection().modify({ isUploaded: true });
       await db.items.toCollection().modify({ isUploaded: true });
     }
 
-    return { success: true, message: "Upload simulated successfully." };
+    return { success: true, message: "Upload completed successfully." };
   } catch (error) {
-    console.error("❌ Simulated upload failed:", error);
+    console.error("Upload failed:", error);
     return { success: false, message: "Upload failed." };
   }
 };

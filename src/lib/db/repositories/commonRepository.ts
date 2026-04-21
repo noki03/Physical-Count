@@ -20,9 +20,6 @@ export const CommonRepository = {
       })
     );
 
-    console.log(
-      `📦 Retrieved ${result.length} finalized bays with their items.`
-    );
     return result;
   },
 
@@ -45,6 +42,5 @@ export const CommonRepository = {
   resetDatabase: async (): Promise<void> => {
     await db.bays.clear();
     await db.items.clear();
-    console.log("🧹 Local database cleared successfully.");
   },
 };
